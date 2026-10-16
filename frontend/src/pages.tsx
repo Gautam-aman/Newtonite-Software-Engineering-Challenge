@@ -33,6 +33,7 @@ import {
   UserRound,
   Users,
   Zap,
+  X,
 } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import {
@@ -592,6 +593,7 @@ export function Explorer() {
             ))}
           </motion.div>
         )}</AnimatePresence>
+        {Array.from(search.keys()).some(key=>key!=="view") && <div className="filter-chips" aria-label="Active filters">{Array.from(search.entries()).filter(([key])=>key!=="view").map(([key,value])=><button key={key} className="filter-chip" onClick={()=>{filter(key,"");if(key==="q")setQ("")}} aria-label={`Remove ${key} filter`}><span>{({q:"Search",status:"Status",priority:"Priority",assigneeId:"Assignee",createdFrom:"Created from",createdTo:"Created to",dueFrom:"Due from",dueTo:"Due to"} as Record<string,string>)[key]??key}: {key==="assigneeId"?memberQuery.data?.find(m=>m.id===value)?.name??"Selected":label(value)}</span><X size={12}/></button>)}<button className="text-button" onClick={()=>{setQ("");setSearch(view?{view}:{})}}>Clear filters</button></div>}
         <div className="list-meta">
           <span>
             <ListFilter size={14} />
