@@ -17,6 +17,7 @@ import {
 Component,createContext,
 useContext,
 useEffect,
+useRef,
 useState,
 type ReactNode
 } from "react";
@@ -173,6 +174,7 @@ export function Modal({
   children: ReactNode;
 }) {
   const reduced = useMotionPreference();
+  const opener = useRef<HTMLElement | null>(null);
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <AnimatePresence>
@@ -187,7 +189,13 @@ export function Modal({
                 transition={{ duration: motionTokens.fast }}
               />
             </Dialog.Overlay>
-            <Dialog.Content forceMount asChild>
+            <Dialog.Content forceMount asChild
+              onOpenAutoFocus={() => { opener.current = document.activeElement as HTMLElement; }}
+              onCloseAutoFocus={(event) => {
+                event.preventDefault();
+                if (document.activeElement === document.body && opener.current?.isConnected) opener.current.focus();
+              }}
+            >
               <motion.div
                 className="modal"
                 initial={
