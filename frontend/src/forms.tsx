@@ -204,7 +204,7 @@ export function ItemForm({
           </label>
           <label>
             Due date
-            <input type="date" {...form.register("dueDate")} />
+            <input type="date" aria-label="Due date" {...form.register("dueDate")} /><span className="date-shortcuts"><button type="button" className="text-button" onClick={()=>form.setValue("dueDate",new Date().toLocaleDateString("en-CA"),{shouldDirty:true})}>Today</button><button type="button" className="text-button" onClick={()=>form.setValue("dueDate","",{shouldDirty:true})}>Clear</button></span>
           </label>
           {item && (
             <label className="span-two">
