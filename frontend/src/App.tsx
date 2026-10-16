@@ -25,6 +25,8 @@ import {
   LogOut,
   Menu,
   Plus,
+  PanelLeftClose,
+  PanelLeftOpen,
   ShieldCheck,
   X,
 } from "lucide-react";
@@ -197,6 +199,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
   const [teamId, setTeamId] = useState("");
   const [creating, setCreating] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const [toast, setToast] = useState("");
   const teams = useQuery({
     queryKey: ["teams"],
@@ -228,7 +231,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
       }}
     >
       <ToastContext.Provider value={setToast}>
-        <div className="workspace">
+        <div className={`workspace ${collapsed ? "sidebar-collapsed" : ""}`}>
           <aside className={`sidebar ${mobile ? "mobile-open" : ""}`}>
             <Brand />
             <button
@@ -250,11 +253,11 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
             <nav onClick={() => setMobile(false)}>
               <NavLink to="/" end>
                 <LayoutDashboard size={18} />
-                Overview
+                <span className="nav-text">Overview</span>
               </NavLink>
               <NavLink to="/items">
                 <ListTodo size={18} />
-                Work items<span className="nav-shortcut">↗</span>
+                <span className="nav-text">Work items</span><span className="nav-shortcut">↗</span>
               </NavLink>
             </nav>
             <div className="sidebar-note">
@@ -271,7 +274,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
                 <ArrowUpRight size={14} />
               </Link>
             </div>
-            <div className="sidebar-bottom">
+            <div className="sidebar-bottom"><button className="sidebar-toggle" aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"} aria-expanded={!collapsed} onClick={()=>setCollapsed(v=>!v)}>{collapsed ? <PanelLeftOpen size={17}/> : <PanelLeftClose size={17}/>}<span>Collapse sidebar</span></button>
               <div className="system-status">
                 <span className="mini-dot" />
                 Operations workspace

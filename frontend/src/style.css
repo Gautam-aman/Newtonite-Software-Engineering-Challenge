@@ -2774,3 +2774,15 @@ tr:hover td {
 .demo-roles button.selected { background: transparent; border-color: transparent; }
 .role-selection { position: absolute; inset: -1px; border: 1px solid var(--accent); background: var(--accent-soft); border-radius: 6px; z-index: -1; }
 .role-label { position: relative; }
+.sidebar,.workspace-main { transition: width .24s var(--ease), margin-left .24s var(--ease); }
+.sidebar-toggle { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; color: #8e99b4; font-size: 11px; margin-bottom: 15px; border-radius: 7px; }
+.sidebar-toggle:hover { color: #e5ddff; background: #ffffff08; }
+.sidebar-collapsed { --sidebar-width: 78px; }
+.sidebar-collapsed .sidebar { padding-inline: 14px; }
+.sidebar-collapsed .brand>span:last-child,.sidebar-collapsed .workspace-tag>div,.sidebar-collapsed .workspace-plan,.sidebar-collapsed .nav-label,.sidebar-collapsed .nav-text,.sidebar-collapsed .nav-shortcut,.sidebar-collapsed .sidebar-note,.sidebar-collapsed .user-profile>div,.sidebar-collapsed .sidebar-toggle>span { display: none; }
+.sidebar-collapsed .workspace-tag { border: 0; padding: 8px 10px; background: none; }
+.sidebar-collapsed nav a { justify-content: center; }
+.sidebar-collapsed .user-profile { flex-direction: column; gap: 13px; }
+.sidebar-collapsed .user-profile .icon-button { margin: 0; }
+.sidebar-collapsed .system-status { font-size: 0; justify-content: center; }
+@media(max-width:800px) { .sidebar-toggle { display: none; }.sidebar-collapsed { --sidebar-width:244px; } }
