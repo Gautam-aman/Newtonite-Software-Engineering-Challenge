@@ -138,10 +138,10 @@ function Queue({
       ) : items.data.items.length ? (
         items.data.items.map((item) => <ItemLine key={item.id} item={item} />)
       ) : (
-        <Empty title="Nothing waiting here">
+        <Empty title={view === "approvals" ? "No reviews waiting" : view === "urgent" ? "Urgent work has an owner" : view === "mine" ? "Your queue is clear" : "No overdue work"}>
           {view === "approvals"
             ? "No work is awaiting your team lead review."
-            : "This queue is clear. You’re up to date."}
+            : view === "mine" ? "Pick up an unassigned item when you’re ready." : "Your team is up to date. New work will appear here."}
         </Empty>
       )}
       <Link className="panel-footer" to={"/items?view=" + view}>
