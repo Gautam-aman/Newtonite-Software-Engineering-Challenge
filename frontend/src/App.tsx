@@ -32,6 +32,7 @@ import { Avatar, ErrorBox, Loading, Spinner, ToastContext } from "./ui";
 import { Dashboard, Explorer, Detail } from "./pages";
 import { ItemForm } from "./forms";
 import { ThemeProvider, ThemeToggle } from "./theme";
+import { motionTokens } from "./motion";
 export const client = new QueryClient({
   defaultOptions: {
     queries: { retry: 1, refetchOnWindowFocus: true, staleTime: 15000 },
@@ -85,7 +86,7 @@ function Login({ onLogin }: { onLogin: (u: User) => void }) {
     <div className="login">
       <section className="login-story">
         <Brand />
-        <div className="login-copy">
+        <motion.div className="login-copy" initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:.5,ease:motionTokens.ease}}>
           <span className="eyebrow light">CLARITY UNDER PRESSURE</span>
           <h1>
             Keep work moving.
@@ -107,14 +108,14 @@ function Login({ onLogin }: { onLogin: (u: User) => void }) {
               <p>Clear ownership · Controlled workflows · Complete history</p>
             </div>
           </div>
-        </div>
+        </motion.div>
         <div className="login-footer">
           <span>Built for the teams behind the scenes.</span>
           <span>01 / OPERATIONS</span>
         </div>
       </section>
       <section className="login-form-side">
-        <div className="login-form">
+        <motion.div className="login-form" initial={{opacity:0,y:18}} animate={{opacity:1,y:0}} transition={{duration:.45,delay:.1,ease:motionTokens.ease}}>
           <span className="eyebrow">YOUR OPERATIONS, TOGETHER</span>
           <h2>Welcome to your workspace</h2>
           <p className="muted">Sign in to see what needs your attention.</p>
@@ -176,7 +177,7 @@ function Login({ onLogin }: { onLogin: (u: User) => void }) {
             </div>
             <small>Development accounts only. Sessions last 8 hours.</small>
           </div>
-        </div>
+        </motion.div>
         <div className="login-theme">
           <ThemeToggle />
         </div>
