@@ -58,7 +58,9 @@ Sixty initial items span three teams, all five workflow states and work types, p
 
 ## Interface preview
 
-![Resolved work item, verified in the live browser](docs/screenshots/resolved-item.png)
+![NewtonOps dashboard, verified in the running container build](docs/screenshots/dashboard.png)
+
+[View the resolved-item screenshot](docs/screenshots/resolved-item.png).
 
 ## Architecture
 
@@ -179,6 +181,7 @@ See [API reference](docs/API.md). Errors use `{code, message, fields}` with 400 
 - [Engineering decisions and permission matrix](ENGINEERING_DECISIONS.md)
 - [3–5 minute demo guide](DEMO_GUIDE.md)
 - [Interview preparation and 100-word submission answer](INTERVIEW_PREP.md)
+- [Final delivery report](docs/SUBMISSION_REPORT.md)
 - [Verification record](docs/VERIFICATION.md)
 - [Implementation checklist](docs/IMPLEMENTATION_PLAN.md)
 

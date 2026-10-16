@@ -32,7 +32,7 @@ our scope; submission itself remains the candidate's action.
 - [x] Polished responsive frontend with real API data, accessible forms and motion.
 - [x] UI tests and browser smoke test; production build.
 - [x] README, decisions, demo and interview preparation.
-- [ ] Final fresh-clone verification and remote-head confirmation.
+- [x] Final fresh-clone verification and remote-head confirmation.
 
 Each coherent milestone is validated, committed and pushed to existing main.
 Docker was absent initially; Docker/Compose and a named Colima VM were installed for
