@@ -254,7 +254,9 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
   const [teamId, setTeamId] = useState("");
   const [creating, setCreating] = useState(false);
   const [editorLoaded, setEditorLoaded] = useState(false);
+  const editorOpener = useRef<HTMLElement | null>(null);
   function openCreate() {
+    editorOpener.current = document.activeElement as HTMLElement;
     setEditorLoaded(true);
     setCreating(true);
   }
@@ -556,6 +558,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
             }
           >
             <ItemForm
+              returnFocus={editorOpener.current}
               open={creating}
               onOpenChange={setCreating}
               onSaved={(item) => {

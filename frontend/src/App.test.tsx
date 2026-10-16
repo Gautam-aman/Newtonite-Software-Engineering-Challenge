@@ -343,3 +343,15 @@ it("focuses a new route while preserving search focus during refetch", async () 
   await userEvent.keyboard("{Escape}");
   expect(search).toHaveValue("");
 });
+
+it("returns focus to the create trigger after the lazy editor closes", async () => {
+  await signIn();
+  const opener = screen.getByRole("button", { name: "New item" });
+  await userEvent.click(opener);
+  await screen.findByLabelText("Title");
+  await userEvent.keyboard("{Escape}");
+  await waitFor(() =>
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+  );
+  await waitFor(() => expect(opener).toHaveFocus());
+});

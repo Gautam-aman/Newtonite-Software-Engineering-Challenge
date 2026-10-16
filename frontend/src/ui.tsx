@@ -167,7 +167,9 @@ export function Modal({
   title,
   description,
   children,
+  returnFocus,
 }: {
+  returnFocus?: HTMLElement | null;
   open: boolean;
   onOpenChange: (value: boolean) => void;
   title: string;
@@ -194,15 +196,18 @@ export function Modal({
               forceMount
               asChild
               onOpenAutoFocus={() => {
-                opener.current = document.activeElement as HTMLElement;
+                opener.current =
+                  returnFocus ?? (document.activeElement as HTMLElement);
               }}
               onCloseAutoFocus={(event) => {
                 event.preventDefault();
+                const target = returnFocus ?? opener.current;
                 if (
-                  document.activeElement === document.body &&
-                  opener.current?.isConnected
+                  (document.activeElement === document.body ||
+                    document.activeElement?.closest('[role="dialog"]')) &&
+                  target?.isConnected
                 )
-                  opener.current.focus();
+                  target.focus();
               }}
             >
               <motion.div

@@ -29,7 +29,9 @@ export function ItemForm({
   onOpenChange,
   item,
   onSaved,
+  returnFocus,
 }: {
+  returnFocus?: HTMLElement | null;
   open: boolean;
   onOpenChange: (v: boolean) => void;
   item?: Item;
@@ -123,6 +125,7 @@ export function ItemForm({
   }
   return (
     <Modal
+      returnFocus={returnFocus}
       open={open}
       onOpenChange={(v) => {
         if (!mutation.isPending) onOpenChange(v);
