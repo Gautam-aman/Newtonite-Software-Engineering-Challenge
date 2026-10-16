@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
   useInfiniteQuery,
+  keepPreviousData,
   useMutation,
   useQuery,
   useQueryClient,
@@ -69,9 +70,10 @@ import {
   useToast,
 } from "./ui";
 import { ItemForm } from "./forms";
-function useItems(values: Record<string, string | number | undefined>) {
+function useItems(values: Record<string, string | number | undefined>, retainPrevious = false) {
   return useQuery({
     queryKey: ["items", values],
+    placeholderData:retainPrevious ? keepPreviousData : undefined,
     queryFn: () => api<Page<Item>>("/items?" + params(values)),
   });
 }
@@ -463,7 +465,7 @@ export function Explorer() {
     cursor: cursors[page],
     limit: 15,
   };
-  const items = useItems(values);
+  const items = useItems(values,true);
   function filter(name: string, value: string) {
     const next = new URLSearchParams(search);
     value ? next.set(name, value) : next.delete(name);
@@ -505,7 +507,7 @@ export function Explorer() {
           </button>
         ))}
       </div></LayoutGroup>
-      <section className="panel explorer">
+      <section className="panel explorer" aria-busy={items.isFetching} data-updating={items.isPlaceholderData}>
         <div className="filter-bar">
           <div className="search-field">
             <Search size={17} />
@@ -599,14 +601,14 @@ export function Explorer() {
             <ListFilter size={14} />
             {views[view] ?? "All work items"}
           </span>
-          <span>Sorted by newest created</span>
+          <span role="status">{items.isFetching ? "Updating results…" : "Sorted by newest created"}</span>
         </div>
         {items.isPending ? (
           <Loading rows={8} />
         ) : items.isError ? (
           <ErrorBox error={items.error} retry={() => void items.refetch()} />
         ) : items.data.items.length ? (
-          <div className="table-scroll">
+          <div className="table-scroll" inert={items.isPlaceholderData}>
             <table>
               <thead>
                 <tr>
