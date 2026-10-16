@@ -11,7 +11,8 @@ import {
   LoaderCircle,
 } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { motionTokens } from "./motion";
 import { ApiError, label, type Item, type Priority, type Status } from "./api";
 export const ToastContext = createContext<(message: string) => void>(() => {});
 export const useToast = () => useContext(ToastContext);
@@ -34,10 +35,16 @@ export function Avatar({
 }
 export function StatusBadge({ status }: { status: Status }) {
   return (
-    <span className={`status status-${status.toLowerCase()}`}>
+    <motion.span
+      key={status}
+      className={`status status-${status.toLowerCase()}`}
+      initial={{ opacity: 0.6, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={motionTokens.spring}
+    >
       <span className="status-dot" />
       {label(status)}
-    </span>
+    </motion.span>
   );
 }
 export function PriorityMark({ priority }: { priority: Priority }) {
@@ -61,7 +68,14 @@ export function Loading({ rows = 4 }: { rows?: number }) {
   return (
     <div role="status" aria-label="Loading data" className="skeleton-list">
       {Array.from({ length: rows }, (_, i) => (
-        <div className="skeleton" key={i} />
+        <div className="skeleton-row" key={i} aria-hidden="true">
+          <span className="skeleton skeleton-avatar" />
+          <div>
+            <span className="skeleton skeleton-title" />
+            <span className="skeleton skeleton-subtitle" />
+          </div>
+          <span className="skeleton skeleton-meta" />
+        </div>
       ))}
     </div>
   );
@@ -74,13 +88,21 @@ export function ErrorBox({
   retry?: () => void;
 }) {
   return (
-    <div className="error-box" role="alert">
+    <motion.div
+      className="error-box"
+      role="alert"
+      initial={{ opacity: 0, y: -5 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: motionTokens.control }}
+    >
       <AlertCircle size={19} />
       <div>
         <strong>
           {error instanceof ApiError && error.status === 409
             ? "This item changed"
-            : "Unable to complete this request"}
+            : error instanceof ApiError && error.status === 403
+              ? "This workspace is restricted"
+              : "Unable to complete this request"}
         </strong>
         <p>{error instanceof Error ? error.message : "Please try again."}</p>
         {retry && (
@@ -90,7 +112,7 @@ export function ErrorBox({
           </button>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 export function Empty({
@@ -101,13 +123,18 @@ export function Empty({
   children: ReactNode;
 }) {
   return (
-    <div className="empty">
+    <motion.div
+      className="empty"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: motionTokens.control }}
+    >
       <span className="empty-icon">
         <Check size={23} />
       </span>
       <h3>{title}</h3>
-      <p>{children}</p>
-    </div>
+      <div className="empty-description">{children}</div>
+    </motion.div>
   );
 }
 export function Modal({
@@ -123,37 +150,63 @@ export function Modal({
   description: string;
   children: ReactNode;
 }) {
+  const reduced = useReducedMotion();
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="modal-overlay" />
-        <Dialog.Content className="modal">
-          <div className="modal-heading">
-            <div>
-              <Dialog.Title>{title}</Dialog.Title>
-              <Dialog.Description>{description}</Dialog.Description>
-            </div>
-            <Dialog.Close className="icon-button" aria-label="Close dialog">
-              <X size={20} />
-            </Dialog.Close>
-          </div>
-          {children}
-        </Dialog.Content>
-      </Dialog.Portal>
+      <AnimatePresence>
+        {open && (
+          <Dialog.Portal forceMount>
+            <Dialog.Overlay forceMount asChild>
+              <motion.div
+                className="modal-overlay"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: motionTokens.fast }}
+              />
+            </Dialog.Overlay>
+            <Dialog.Content forceMount asChild>
+              <motion.div
+                className="modal"
+                initial={
+                  reduced ? { opacity: 0 } : { opacity: 0, scale: 0.97, y: 18 }
+                }
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={
+                  reduced ? { opacity: 0 } : { opacity: 0, scale: 0.98, y: 8 }
+                }
+                transition={{
+                  duration: motionTokens.control,
+                  ease: motionTokens.ease,
+                }}
+              >
+                <div className="modal-heading">
+                  <div>
+                    <span className="eyebrow">NEWTONOPS WORKSPACE</span>
+                    <Dialog.Title>{title}</Dialog.Title>
+                    <Dialog.Description>{description}</Dialog.Description>
+                  </div>
+                  <Dialog.Close
+                    className="icon-button"
+                    aria-label="Close dialog"
+                  >
+                    <X size={20} />
+                  </Dialog.Close>
+                </div>
+                {children}
+              </motion.div>
+            </Dialog.Content>
+          </Dialog.Portal>
+        )}
+      </AnimatePresence>
     </Dialog.Root>
   );
 }
+// Route animation is owned by the shell; page content does not animate twice.
 export function PageEnter({ children }: { children: ReactNode }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className="page-enter">{children}</div>;
 }
+
 export function dueLabel(date: string | null) {
   if (!date) return "No due date";
   return new Date(date + "T00:00:00").toLocaleDateString("en", {

@@ -31,6 +31,7 @@ import { api, setToken, type Team, type User } from "./api";
 import { Avatar, ErrorBox, Loading, Spinner, ToastContext } from "./ui";
 import { Dashboard, Explorer, Detail } from "./pages";
 import { ItemForm } from "./forms";
+import { ThemeProvider, ThemeToggle } from "./theme";
 export const client = new QueryClient({
   defaultOptions: {
     queries: { retry: 1, refetchOnWindowFocus: true, staleTime: 15000 },
@@ -176,6 +177,9 @@ function Login({ onLogin }: { onLogin: (u: User) => void }) {
             <small>Development accounts only. Sessions last 8 hours.</small>
           </div>
         </div>
+        <div className="login-theme">
+          <ThemeToggle />
+        </div>
         <div className="login-bottom">
           <span className="mini-dot" />A calmer way to manage the critical.
         </div>
@@ -313,6 +317,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
                 </span>
               </div>
               <div className="header-actions">
+                <ThemeToggle />
                 <div className="team-select">
                   <label className="sr-only" htmlFor="team-switcher">
                     Active team
@@ -428,12 +433,14 @@ function Root() {
 }
 export default function App() {
   return (
-    <QueryClientProvider client={client}>
-      <BrowserRouter>
-        <MotionConfig reducedMotion="user" transition={{ duration: 0.2 }}>
-          <Root />
-        </MotionConfig>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={client}>
+        <BrowserRouter>
+          <MotionConfig reducedMotion="user" transition={{ duration: 0.2 }}>
+            <Root />
+          </MotionConfig>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
