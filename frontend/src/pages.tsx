@@ -856,7 +856,7 @@ export function Detail() {
             <span>·</span>
             {label(item.type)}
             <span>·</span>
-            <span>Version {item.version}</span>
+            <motion.span className="version-tag" key={item.version} initial={{opacity:.5}} animate={{opacity:1}}>Version {item.version}</motion.span>
           </div>
           <h1>{item.title}</h1>
           <p>
@@ -1050,7 +1050,7 @@ export function Detail() {
           </section>
         </div>
         <aside className="detail-aside">
-          <section className="panel properties">
+          <motion.section className="panel properties" initial={{opacity:0,x:10}} animate={{opacity:1,x:0}} transition={{duration:.28}}>
             <div className="panel-header">
               <h3>Work item properties</h3>
               <MoreHorizontal size={17} />
@@ -1086,7 +1086,7 @@ export function Detail() {
               </div>
               <div>
                 <dt>Team</dt>
-                <dd>{item.teamName}</dd>
+                <dd><span className="property-team-dot"/>{item.teamName}</dd>
               </div>
               <div>
                 <dt>Due date</dt>
@@ -1100,7 +1100,7 @@ export function Detail() {
                 <dd>{label(role)}</dd>
               </div>
             </dl>
-          </section>
+          </motion.section>
           <section className="panel next-step">
             <span className="eyebrow">THE NEXT MOVE</span>
             <h3>
