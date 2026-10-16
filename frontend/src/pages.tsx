@@ -428,6 +428,8 @@ export function Explorer() {
   const { teamId, teams, create } = useSession();
   const [search, setSearch] = useSearchParams();
   const [q, setQ] = useState(search.get("q") ?? "");
+  const searchInput=useRef<HTMLInputElement>(null);
+  useEffect(()=>{function shortcut(event:KeyboardEvent){const active=document.activeElement;const typing=active?.matches("input,textarea,select,[contenteditable=true]");if(event.key==="/"&&!typing&&!document.querySelector('[role="dialog"]')){event.preventDefault();searchInput.current?.focus()}if(event.key==="Escape"&&active===searchInput.current)setQ("")}window.addEventListener("keydown",shortcut);return()=>window.removeEventListener("keydown",shortcut)},[]);
   const [advanced, setAdvanced] = useState(false);
   const [cursors, setCursors] = useState<(string | undefined)[]>([undefined]);
   const page = cursors.length - 1;
@@ -516,12 +518,12 @@ export function Explorer() {
           <div className="search-field">
             <Search size={17} />
             <input
-              aria-label="Search work items"
+              ref={searchInput} aria-label="Search work items"
               placeholder="Search work items…"
               value={q}
               onChange={(e) => setQ(e.target.value)}
             />
-            {q && (
+            {!q&&<kbd className="search-shortcut" aria-hidden="true">/</kbd>}{q && (
               <button
                 className="text-button"
                 onClick={() => setQ("")}
