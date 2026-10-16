@@ -24,16 +24,18 @@ our scope; submission itself remains the candidate's action.
 
 ## Milestones
 - [x] Read advisory; inspect/fetch existing main and origin; record assumptions.
-- [ ] Java 21 / Spring Boot, React strict TypeScript, Compose and Maven wrapper.
-- [ ] Flyway schema, demo users, authentication and team authorization.
-- [ ] Filtered/keyset work item API and consistent errors.
-- [ ] Transactional claim, versioning, idempotency, workflow, comments and audit.
-- [ ] Actual PostgreSQL concurrency/security integration tests.
-- [ ] Polished responsive frontend with real API data, accessible forms and motion.
-- [ ] UI tests and browser smoke test; production build.
-- [ ] README, decisions, demo, interview preparation; fresh-clone verification.
+- [x] Java 21 / Spring Boot, React strict TypeScript, Compose and Maven wrapper.
+- [x] Flyway schema, demo users, authentication and team authorization.
+- [x] Filtered/keyset work item API and consistent errors.
+- [x] Transactional claim, versioning, idempotency, workflow, comments and audit.
+- [x] Actual PostgreSQL concurrency/security integration tests.
+- [x] Polished responsive frontend with real API data, accessible forms and motion.
+- [x] UI tests and browser smoke test; production build.
+- [x] README, decisions, demo and interview preparation.
+- [ ] Final fresh-clone verification and remote-head confirmation.
 
 Each coherent milestone is validated, committed and pushed to existing main.
-Docker is absent on the initial host; local PostgreSQL can validate the same migrations
-and SQL. Compose execution must be explicitly disclosed if still unverified at handoff.
+Docker was absent initially; Docker/Compose and a named Colima VM were installed for
+local validation. Both local PostgreSQL 15 and PostgreSQL 16 Testcontainers passed.
+Full Compose and fresh-clone evidence is recorded in docs/VERIFICATION.md.
 Outbox, notifications, theme switching and live deployment are deferred until core passes.
