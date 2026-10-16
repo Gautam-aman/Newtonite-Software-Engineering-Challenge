@@ -251,13 +251,15 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
             </div>
             <span className="nav-label">WORKSPACE</span>
             <nav onClick={() => setMobile(false)}>
-              <NavLink to="/" end>
+              <NavLink to="/" end aria-label="Overview" data-tooltip="Overview">{({isActive})=><>
+                {isActive&&<motion.span className="nav-active-indicator" layoutId="active-navigation" transition={motionTokens.spring}/>}
                 <LayoutDashboard size={18} />
-                <span className="nav-text">Overview</span>
+                <span className="nav-text">Overview</span></>}
               </NavLink>
-              <NavLink to="/items">
+              <NavLink to="/items" aria-label="Work items" data-tooltip="Work items">{({isActive})=><>
+                {isActive&&<motion.span className="nav-active-indicator" layoutId="active-navigation" transition={motionTokens.spring}/>}
                 <ListTodo size={18} />
-                <span className="nav-text">Work items</span><span className="nav-shortcut">↗</span>
+                <span className="nav-text">Work items</span><span className="nav-shortcut">↗</span></>}
               </NavLink>
             </nav>
             <div className="sidebar-note">

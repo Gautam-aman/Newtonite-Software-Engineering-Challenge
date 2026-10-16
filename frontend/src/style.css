@@ -2786,3 +2786,9 @@ tr:hover td {
 .sidebar-collapsed .user-profile .icon-button { margin: 0; }
 .sidebar-collapsed .system-status { font-size: 0; justify-content: center; }
 @media(max-width:800px) { .sidebar-toggle { display: none; }.sidebar-collapsed { --sidebar-width:244px; } }
+.sidebar nav a { isolation: isolate; }
+.sidebar nav a.active { background: transparent; }
+.nav-active-indicator { position: absolute; inset: 0; z-index: -1; background: #8f76f51a; border: 1px solid #9c82eb24; border-radius: 8px; }
+.nav-active-indicator:before { content: ''; position: absolute; left: -1px; top: 12px; bottom: 12px; width: 3px; border-radius: 0 3px 3px 0; background: #ad97ff; }
+.sidebar-collapsed nav a:after { content: attr(data-tooltip); position: absolute; left: calc(100% + 20px); padding: 8px 12px; background: var(--surface-raised); border: 1px solid var(--border); border-radius: 7px; color: var(--text); font-size: 11px; box-shadow: var(--shadow); white-space: nowrap; pointer-events: none; opacity: 0; transform: translateX(-4px); transition: opacity .16s, transform .16s var(--ease); }
+.sidebar-collapsed nav a:hover:after,.sidebar-collapsed nav a:focus-visible:after { opacity: 1; transform: translateX(0); }
