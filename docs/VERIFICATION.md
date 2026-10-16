@@ -9,7 +9,7 @@ This section supersedes the initial interface counts and bundle-size limitation 
 | Executed check | Observed result |
 | --- | --- |
 | `./scripts/test.sh` with the Colima environment below | 22 PostgreSQL backend tests, formatter, then-current 14 frontend tests and production build passed |
-| Final expanded `npm test --prefix frontend` | 15 passed across 3 files, including route/search focus, preferences, drawer/editor focus and lazy editor dismissal |
+| Final expanded `npm test --prefix frontend` | 16 passed across 3 files, including route/search focus, preferences, drawer/editor focus and lazy editor dismissal |
 | `npm run build --prefix frontend` | Strict TypeScript and production build passed; entry ~495 kB /158 kB gzip; editor and routes deferred; no chunk-size advisory |
 | `docker compose up -d --build --no-deps frontend` | Rebuilt frontend; database, backend and frontend healthy at loopback port 8088 |
 | `python3 scripts/smoke.py` through rebuilt Nginx | Passed authentication, idempotent replay, team boundary, claim conflict, complete workflow, comment, approval, closure, history, metrics and logout |
@@ -19,11 +19,11 @@ This section supersedes the initial interface counts and bundle-size limitation 
 | Fresh production browser console | No error entries during workflow inspection |
 | GitHub Actions at `631e791` | [Run 38887449700](https://github.com/Gautam-aman/Newtonite-Software-Engineering-Challenge/actions/runs/38887449700) passed backend, frontend and Compose smoke |
 
-The final editor focus refinement has its own 15-test validation. The final response identifies the final pushed revision and CI result. Source commits and evidence commits cannot embed their own hashes.
+The final editor and drawer-route focus refinements have their own 16-test validation. Runtime source revision: `d9cb2823dbafc989100147f99db3a0a08e82a7ba`. The final response identifies the final pushed revision and CI result. Source commits and evidence commits cannot embed their own hashes.
 
-Screenshots: [dark dashboard](screenshots/dashboard.png), [light dashboard](screenshots/dashboard-light.png), [phone explorer](screenshots/items-mobile.png), [resolved workflow](screenshots/resolved-item.png). The phone capture includes the development inspection toolbar. This fixture uses a real iframe CSS viewport and visible width diagnostics; it is excluded from the production Vite entry. No generated mockups are used.
+Screenshots: [dark dashboard](screenshots/dashboard.png), [light dashboard](screenshots/dashboard-light.png), [phone explorer](screenshots/items-mobile.png), [resolved workflow](screenshots/resolved-item.png). The final phone capture comes directly from the production frontend at a 390 × 844 viewport; document and viewport widths both measured 390 pixels. This fixture uses a real iframe CSS viewport and visible width diagnostics; it is excluded from the production Vite entry. No generated mockups are used.
 
-The responsive review fixed phone hero decoration overlap and temporary desktop margin interpolation at the mobile breakpoint. Keyboard regression checks fixed drawer focus restoration and editor focus across lazy loading. Automated UI tests mock HTTP; the live browser, HTTP smoke and PostgreSQL suite supply corresponding integration evidence. This is not a formal accessibility or cross-browser certification.
+The responsive review fixed phone hero decoration overlap and temporary desktop margin interpolation at the mobile breakpoint. Keyboard regression checks fixed drawer focus restoration and editor focus across lazy loading, and destination-heading focus after drawer navigation. Automated UI tests mock HTTP; the live browser, HTTP smoke and PostgreSQL suite supply corresponding integration evidence. This is not a formal accessibility or cross-browser certification.
 
 ## Initial implementation verification (historical)
 

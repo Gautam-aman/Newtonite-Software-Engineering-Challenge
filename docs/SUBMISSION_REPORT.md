@@ -14,7 +14,7 @@ The complete synchronous product is implemented. CRUD deletion is deliberately m
 
 ## D. Evidence
 
-Original full-stack fresh remote checkout tested: **32792ed93da99c24cedaaf7030c476516010578d**. The subsequent frontend redesign passed 15 frontend tests and strict build; the unchanged backend passed all 22 integration tests again. See [UI_REDESIGN.md](UI_REDESIGN.md) and the current [verification record](VERIFICATION.md) for four-width inspection, live workflow, screenshots and CI.
+Original full-stack fresh remote checkout tested: **32792ed93da99c24cedaaf7030c476516010578d**. The subsequent frontend redesign passed 16 frontend tests and strict build; the unchanged backend passed all 22 integration tests again. See [UI_REDESIGN.md](UI_REDESIGN.md) and the current [verification record](VERIFICATION.md) for four-width inspection, live workflow, screenshots and CI.
 
 | Executed command/check | Observed result |
 | --- | --- |

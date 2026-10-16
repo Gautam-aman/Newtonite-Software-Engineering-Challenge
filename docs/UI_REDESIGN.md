@@ -28,10 +28,10 @@ Routes and the form editor load on demand. The final local production entry is a
 
 ## Validation
 
-- Frontend: 15 regression tests, strict TypeScript and Vite production build.
+- Frontend: 16 regression tests, strict TypeScript and Vite production build.
 - Backend: 22 real PostgreSQL integration tests, no failures/errors/skips; formatting check passed.
 - Responsive inspection uses the dev-only `frontend/qa/responsive.html` fixture. Its iframe has a real CSS viewport of 1440, 1024, 768 or 390 pixels, with visible document-width diagnostics. The display is scaled only when needed to fit the inspection window.
-- Keyboard checks found and fixed focus restoration after drawer/editor dismissal. Responsive checks found and fixed desktop-margin interpolation across the mobile breakpoint and removed decorative hero overlap on phones.
+- Keyboard checks found and fixed focus restoration after drawer/editor dismissal and heading focus after drawer navigation. Responsive checks found and fixed desktop-margin interpolation across the mobile breakpoint and removed decorative hero overlap on phones.
 - Login, dashboard, explorer, detail and create form were visually inspected at all four widths; the settled document width matched its viewport each time. The fixture scales the display but preserves the iframe CSS viewport. This is not a physical-device or cross-browser matrix.
 - Final container, HTTP smoke, browser workflow and CI results are recorded in [VERIFICATION.md](VERIFICATION.md).
 
