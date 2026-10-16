@@ -137,7 +137,7 @@ function Login({ onLogin }: { onLogin: (u: User) => void }) {
             <label>
               Password
               <div className="password-field"><input
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? "text" : "password"} aria-label="Password"
                 autoComplete="current-password"
                 required
                 value={password}
@@ -169,12 +169,13 @@ function Login({ onLogin }: { onLogin: (u: User) => void }) {
                   key={role}
                   type="button"
                   className={email.startsWith(role + "@") ? "selected" : ""}
+                  aria-pressed={email.startsWith(role + "@")}
                   onClick={() => {
                     setEmail(role + "@newtonops.local");
                     setPassword("NewtonOps!2026");
                   }}
                 >
-                  {role}
+                  {email.startsWith(role + "@") && <motion.span className="role-selection" layoutId="demo-role-selection" transition={motionTokens.spring}/>}<span className="role-label">{role}</span>
                 </button>
               ))}
             </div>

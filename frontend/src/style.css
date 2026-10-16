@@ -2770,3 +2770,7 @@ tr:hover td {
 .password-field { position: relative; margin-top: 8px; }
 .password-field input { margin-top: 0; padding-right: 48px; }
 .password-field .icon-button { position: absolute; right: 7px; top: 5px; }
+.demo-roles button { isolation: isolate; background: transparent; }
+.demo-roles button.selected { background: transparent; border-color: transparent; }
+.role-selection { position: absolute; inset: -1px; border: 1px solid var(--accent); background: var(--accent-soft); border-radius: 6px; z-index: -1; }
+.role-label { position: relative; }
