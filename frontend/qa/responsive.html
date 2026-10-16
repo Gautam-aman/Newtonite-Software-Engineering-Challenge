@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NewtonOps responsive inspection</title>
+    <style>
+      body {
+        margin: 0;
+        background: #080b13;
+        color: #dae0f0;
+        font: 13px system-ui;
+      }
+      header {
+        height: 60px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 0 18px;
+        position: sticky;
+        left: 0;
+        top: 0;
+        background: #151b28;
+        z-index: 2;
+        width: 100vw;
+        box-sizing: border-box;
+      }
+      button {
+        padding: 8px 13px;
+        color: #d9d0ff;
+        background: #2d2544;
+        border: 1px solid #73619b;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      button[aria-pressed="true"] {
+        background: #7158c9;
+        color: white;
+      }
+      iframe {
+        display: block;
+        border: 0;
+        width: 1440px;
+        height: 1200px;
+        background: #0c1019;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <strong>Viewport inspection</strong
+      ><button data-width="1440" aria-pressed="true">1440px</button
+      ><button data-width="1024" aria-pressed="false">1024px</button
+      ><button data-width="768" aria-pressed="false">768px</button
+      ><button data-width="390" aria-pressed="false">390px</button>
+    </header>
+    <iframe id="preview" title="NewtonOps responsive preview" src="/"></iframe>
+    <script>
+      const frame = document.querySelector("#preview");
+      const report = document.createElement("output");
+      report.id = "layout-report";
+      report.setAttribute("role", "status");
+      document.querySelector("header").append(report);
+      const stage = document.createElement("div");
+      stage.style.overflow = "hidden";
+      frame.before(stage);
+      stage.append(frame);
+      function measure() {
+        const page = frame.contentDocument;
+        if (!page) return;
+        const viewport = page.documentElement.clientWidth;
+        const width = page.documentElement.scrollWidth;
+        report.textContent = `${viewport}px viewport · ${width}px document · ${width <= viewport ? "No horizontal overflow" : "OVERFLOW"}`;
+        report.dataset.viewport = viewport;
+        report.dataset.documentWidth = width;
+        const scale = Math.min(1, (window.innerWidth - 24) / viewport);
+        frame.style.transformOrigin = "top left";
+        frame.style.transform = `scale(${scale})`;
+        stage.style.height = 1200 * scale + "px";
+      }
+      frame.addEventListener("load", () => {
+        let pending = false;
+        const observe = () => {
+          if (!pending) {
+            pending = true;
+            requestAnimationFrame(() => {
+              pending = false;
+              measure();
+            });
+          }
+        };
+        new MutationObserver(observe).observe(
+          frame.contentDocument.documentElement,
+          { childList: true, subtree: true, attributes: true },
+        );
+        frame.contentWindow.addEventListener("resize", observe);
+        measure();
+      });
+      document.querySelectorAll("button").forEach((button) =>
+        button.addEventListener("click", () => {
+          frame.style.width = button.dataset.width + "px";
+          document
+            .querySelectorAll("button")
+            .forEach((b) =>
+              b.setAttribute("aria-pressed", String(b === button)),
+            );
+          requestAnimationFrame(measure);
+        }),
+      );
+      window.addEventListener("resize", measure);
+    </script>
+  </body>
+</html>
