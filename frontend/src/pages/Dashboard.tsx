@@ -21,7 +21,7 @@ import { useEffect,useState } from "react";
 import { Link } from "react-router-dom";
 import { api,label,params,statuses,type Item,type Summary } from "../api";
 import { EventGlyph } from "../events";
-import { AnimatedNumber,Stagger,StaggerItem } from "../motion";
+import { AnimatedNumber,motionTokens,Stagger,StaggerItem } from "../motion";
 import { useSession } from "../session";
 import {
 Empty,
@@ -394,7 +394,7 @@ export function Dashboard() {
                     }}
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
-                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: motionTokens.numeric, ease: motionTokens.ease }}
                   />
                 ) : null;
               })}

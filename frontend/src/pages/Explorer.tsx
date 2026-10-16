@@ -14,6 +14,7 @@ import { AnimatePresence,LayoutGroup,motion } from "motion/react";
 import { useEffect,useRef,useState } from "react";
 import { Link,useSearchParams } from "react-router-dom";
 import { api,label,priorities,statuses,type Member } from "../api";
+import { motionTokens } from "../motion";
 import { useMotionPreference } from "../motion-preferences";
 import { useSession } from "../session";
 import {
@@ -150,7 +151,7 @@ export function Explorer() {
                 <motion.span
                   className="tab-indicator"
                   layoutId="work-view"
-                  transition={{ type: "spring", stiffness: 400, damping: 34 }}
+                  transition={motionTokens.spring}
                 />
               )}
             </button>
@@ -243,7 +244,7 @@ export function Explorer() {
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -5 }}
-              transition={{ duration: 0.18 }}
+              transition={{ duration: motionTokens.fast }}
             >
               {[
                 ["createdFrom", "Created from"],
@@ -348,7 +349,7 @@ export function Explorer() {
                       initial={reduced ? false : { opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{
-                        duration: 0.22,
+                        duration: motionTokens.control,
                         delay: reduced ? 0 : Math.min(index, 8) * 0.025,
                       }}
                     >

@@ -7,6 +7,7 @@ export const motionTokens = {
   fast: 0.16,
   control: 0.22,
   page: 0.32,
+  numeric: 0.45,
   ease: [0.22, 1, 0.36, 1] as const,
   spring: { type: "spring" as const, stiffness: 360, damping: 32 },
 };
@@ -70,7 +71,7 @@ export function AnimatedNumber({ value }: { value: number }) {
     }
     // Update the text node, not the component tree, on each animation frame.
     const animation = animate(from, value, {
-      duration: 0.45,
+      duration: motionTokens.numeric,
       ease: motionTokens.ease,
       onUpdate: (latest) => {
         if (node.current)

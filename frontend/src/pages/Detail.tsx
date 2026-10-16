@@ -38,6 +38,7 @@ type Status,
 } from "../api";
 import { AuditChanges,EventGlyph } from "../events";
 import { ItemForm } from "../forms";
+import { motionTokens } from "../motion";
 import { useSession } from "../session";
 import {
 Avatar,
@@ -252,7 +253,7 @@ export function Detail() {
                         className="comment"
                         initial={{ opacity: 0, y: 9 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.22 }}
+                        transition={{ duration: motionTokens.control }}
                       >
                         <Avatar name={c.actorName} />
                         <div>
@@ -360,7 +361,7 @@ export function Detail() {
                       className="timeline-event"
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.22 }}
+                      transition={{ duration: motionTokens.control }}
                     >
                       <EventGlyph type={e.eventType} />
                       <div>
@@ -408,7 +409,7 @@ export function Detail() {
             className="panel properties"
             initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.28 }}
+            transition={{ duration: motionTokens.page }}
           >
             <div className="panel-header">
               <h3>Work item properties</h3>

@@ -33,7 +33,7 @@
   --radius: 13px;
   --radius-sm: 8px;
   --sidebar-width: 244px;
-  --control-duration: 180ms;
+  --control-duration: 220ms;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   font-family: var(--font-sans);
   font-size: 14px;
