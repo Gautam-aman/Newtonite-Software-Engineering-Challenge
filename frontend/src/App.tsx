@@ -1,53 +1,62 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import {
-QueryClient,
-QueryClientProvider,
-useQuery,
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
 } from "@tanstack/react-query";
 import {
-Activity,
-ArrowUpRight,
-ChevronDown,
-Command,
-Eye,
-EyeOff,
-LayoutDashboard,
-ListTodo,
-LogOut,
-Menu,
-PanelLeftClose,
-PanelLeftOpen,
-Plus,
-ShieldCheck,
-X,
+  Activity,
+  ArrowUpRight,
+  ChevronDown,
+  Command,
+  Eye,
+  EyeOff,
+  LayoutDashboard,
+  ListTodo,
+  LogOut,
+  Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Plus,
+  ShieldCheck,
+  X,
 } from "lucide-react";
-import { AnimatePresence,LayoutGroup,motion } from "motion/react";
-import { lazy,Suspense,useCallback,useEffect,useRef,useState } from "react";
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import {
-BrowserRouter,
-Link,
-NavLink,
-Route,
-Routes,
-useLocation,
-useNavigate,
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  BrowserRouter,
+  Link,
+  NavLink,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
 } from "react-router-dom";
-import { api,setToken,type Team,type User } from "./api";
-import { motionTokens,RouteSurface } from "./motion";
+import { api, setToken, type Team, type User } from "./api";
+import { motionTokens, RouteSurface } from "./motion";
 import {
-MotionPreferencesProvider,
-MotionToggle,
-useMotionPreference,
+  MotionPreferencesProvider,
+  MotionToggle,
+  useMotionPreference,
 } from "./motion-preferences";
 import { SessionContext } from "./session";
-import { ThemeProvider,ThemeToggle } from "./theme";
+import { ThemeProvider, ThemeToggle } from "./theme";
 import {
-ActionLabel,
-Avatar,
-ErrorBox,
-Loading,
-Modal,ScreenBoundary,Toast,
-ToastContext
+  ActionLabel,
+  Avatar,
+  ErrorBox,
+  Loading,
+  Modal,
+  ScreenBoundary,
+  Toast,
+  ToastContext,
 } from "./ui";
 const Dashboard = lazy(() =>
   import("./pages/Dashboard").then((module) => ({ default: module.Dashboard })),
@@ -412,7 +421,14 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
                       transition={{ duration: motionTokens.fast }}
                     />
                   </Dialog.Overlay>
-                  <Dialog.Content forceMount asChild onCloseAutoFocus={(event) => { event.preventDefault(); mobileTrigger.current?.focus(); }}>
+                  <Dialog.Content
+                    forceMount
+                    asChild
+                    onCloseAutoFocus={(event) => {
+                      event.preventDefault();
+                      mobileTrigger.current?.focus();
+                    }}
+                  >
                     <motion.aside
                       className="sidebar mobile-open drawer-sidebar"
                       initial={{ x: reduced ? 0 : -260 }}
@@ -582,7 +598,9 @@ export default function App() {
       <QueryClientProvider client={client}>
         <BrowserRouter>
           <MotionPreferencesProvider>
-            <ScreenBoundary><Root /></ScreenBoundary>
+            <ScreenBoundary>
+              <Root />
+            </ScreenBoundary>
           </MotionPreferencesProvider>
         </BrowserRouter>
       </QueryClientProvider>

@@ -1,12 +1,12 @@
 import {
-ArrowRight,
-Check,
-MessageSquare,
-Pencil,
-Plus,
-ShieldCheck,
-UserRound,
-X,
+  ArrowRight,
+  Check,
+  MessageSquare,
+  Pencil,
+  Plus,
+  ShieldCheck,
+  UserRound,
+  X,
 } from "lucide-react";
 export function EventGlyph({ type }: { type: string }) {
   const Icon =

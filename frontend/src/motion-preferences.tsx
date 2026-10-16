@@ -1,11 +1,11 @@
-import { Accessibility,Sparkles } from "lucide-react";
-import { MotionConfig,useReducedMotion } from "motion/react";
+import { Accessibility, Sparkles } from "lucide-react";
+import { MotionConfig, useReducedMotion } from "motion/react";
 import {
-createContext,
-useContext,
-useEffect,
-useState,
-type ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
 } from "react";
 
 type MotionMode = "system" | "reduced" | "full";

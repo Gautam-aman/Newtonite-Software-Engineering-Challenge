@@ -1,5 +1,5 @@
-import { animate,motion,type Variants } from "motion/react";
-import { useEffect,useRef,type ReactNode } from "react";
+import { animate, motion, type Variants } from "motion/react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { useMotionPreference } from "./motion-preferences";
 
 // Shared timing vocabulary. Major entrances are deliberately longer than controls.

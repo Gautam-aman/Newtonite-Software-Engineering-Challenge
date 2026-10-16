@@ -1,60 +1,60 @@
 import {
-useInfiniteQuery,
-useMutation,
-useQuery,
-useQueryClient,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
 } from "@tanstack/react-query";
 import {
-Activity as ActivityIcon,
-ArrowRight,
-Calendar,
-CheckCheck,
-ChevronLeft,
-Flag,
-MessageSquare,
-MoreHorizontal,
-Pencil,
-Send,
-ShieldCheck,
-UserRound,
-Users,
+  Activity as ActivityIcon,
+  ArrowRight,
+  Calendar,
+  CheckCheck,
+  ChevronLeft,
+  Flag,
+  MessageSquare,
+  MoreHorizontal,
+  Pencil,
+  Send,
+  ShieldCheck,
+  UserRound,
+  Users,
 } from "lucide-react";
-import { AnimatePresence,motion } from "motion/react";
-import { useEffect,useState } from "react";
-import { Link,useParams } from "react-router-dom";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import {
-api,
-ApiError,
-isLead,
-label,
-params,
-statuses,
-transitions,
-type Activity,
-type Comment,
-type Item,
-type Page,
-type Status,
+  api,
+  ApiError,
+  isLead,
+  label,
+  params,
+  statuses,
+  transitions,
+  type Activity,
+  type Comment,
+  type Item,
+  type Page,
+  type Status,
 } from "../api";
-import { AuditChanges,EventGlyph } from "../events";
+import { AuditChanges, EventGlyph } from "../events";
 import { ItemForm } from "../forms";
 import { motionTokens } from "../motion";
 import { useSession } from "../session";
 import {
-Avatar,
-dueLabel,
-ErrorBox,
-Loading,
-overdue,
-PageEnter,
-PriorityMark,
-shortId,
-Spinner,
-StatusBadge,
-useToast,
+  Avatar,
+  dueLabel,
+  ErrorBox,
+  Loading,
+  overdue,
+  PageEnter,
+  PriorityMark,
+  shortId,
+  Spinner,
+  StatusBadge,
+  useToast,
 } from "../ui";
 
-import { eventLabel,relativeTime } from "../event-text";
+import { eventLabel, relativeTime } from "../event-text";
 export function Detail() {
   const { id } = useParams();
   const { user, teams } = useSession();

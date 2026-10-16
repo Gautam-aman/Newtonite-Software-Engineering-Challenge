@@ -1,8 +1,14 @@
-import { cleanup,render,screen,waitFor,within } from "@testing-library/react";
+import {
+  cleanup,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach,beforeEach,describe,expect,it,vi } from "vitest";
-import App,{ client } from "./App";
-import { api,ApiError,setToken,transitions,type Item } from "./api";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import App, { client } from "./App";
+import { api, ApiError, setToken, transitions, type Item } from "./api";
 const team = { id: "team-1", name: "Platform Operations", role: "MEMBER" };
 const user = {
   id: "user-1",
@@ -159,7 +165,9 @@ describe("connected workspace", () => {
   it("creates an item with validation, an idempotency key and real API data", async () => {
     await signIn();
     await userEvent.click(screen.getByRole("button", { name: "New item" }));
-    await userEvent.click(await screen.findByRole("button", { name: "Create item" }));
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Create item" }),
+    );
     expect(
       await screen.findByText("Give this item a clear title."),
     ).toBeInTheDocument();
@@ -167,7 +175,9 @@ describe("connected workspace", () => {
       screen.getByPlaceholderText("What needs to happen?"),
       "Review settlement",
     );
-    await userEvent.click(await screen.findByRole("button", { name: "Create item" }));
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Create item" }),
+    );
     await waitFor(() => expect(writes).toHaveLength(1));
     expect(writes[0]).toMatchObject({
       title: "Review settlement",
@@ -274,33 +284,61 @@ describe("permission and transport contracts", () => {
   });
 });
 
-it("offers accessible password visibility and exclusive demo-role selection",async()=>{
- render(<App/>);
- const password=screen.getByLabelText("Password");expect(password).toHaveAttribute("type","password");
- await userEvent.click(screen.getByRole("button",{name:"Show password"}));expect(password).toHaveAttribute("type","text");
- await userEvent.click(screen.getByRole("button",{name:"lead"}));
- expect(screen.getByLabelText("Email address")).toHaveValue("lead@newtonops.local");
- expect(screen.getByRole("button",{name:"lead"})).toHaveAttribute("aria-pressed","true");
- expect(screen.getByRole("button",{name:"member"})).toHaveAttribute("aria-pressed","false");
+it("offers accessible password visibility and exclusive demo-role selection", async () => {
+  render(<App />);
+  const password = screen.getByLabelText("Password");
+  expect(password).toHaveAttribute("type", "password");
+  await userEvent.click(screen.getByRole("button", { name: "Show password" }));
+  expect(password).toHaveAttribute("type", "text");
+  await userEvent.click(screen.getByRole("button", { name: "lead" }));
+  expect(screen.getByLabelText("Email address")).toHaveValue(
+    "lead@newtonops.local",
+  );
+  expect(screen.getByRole("button", { name: "lead" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  expect(screen.getByRole("button", { name: "member" })).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
 });
 
-it("traps mobile navigation focus and restores the trigger on Escape",async()=>{
- await signIn();const trigger=screen.getByRole("button",{name:"Open navigation"});await userEvent.click(trigger);
- const dialog=await screen.findByRole("dialog",{name:"Workspace navigation"});expect(within(dialog).getByRole("link",{name:"Work items"})).toBeInTheDocument();
- expect(document.body).toHaveAttribute("data-scroll-locked");
- await userEvent.keyboard("{Escape}");await waitFor(()=>expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),{timeout:2000});expect(trigger).toHaveFocus();
+it("traps mobile navigation focus and restores the trigger on Escape", async () => {
+  await signIn();
+  const trigger = screen.getByRole("button", { name: "Open navigation" });
+  await userEvent.click(trigger);
+  const dialog = await screen.findByRole("dialog", {
+    name: "Workspace navigation",
+  });
+  expect(
+    within(dialog).getByRole("link", { name: "Work items" }),
+  ).toBeInTheDocument();
+  expect(document.body).toHaveAttribute("data-scroll-locked");
+  await userEvent.keyboard("{Escape}");
+  await waitFor(
+    () => expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    { timeout: 2000 },
+  );
+  expect(trigger).toHaveFocus();
 });
 
 it("focuses a new route while preserving search focus during refetch", async () => {
   await signIn();
   await userEvent.click(screen.getByRole("link", { name: "Work items" }));
-  const heading = await screen.findByRole("heading", { name: "Work, with a clear direction." });
+  const heading = await screen.findByRole("heading", {
+    name: "Work, with a clear direction.",
+  });
   await waitFor(() => expect(heading).toHaveFocus());
   await userEvent.keyboard("/");
   const search = screen.getByRole("textbox", { name: "Search work items" });
   expect(search).toHaveFocus();
   await userEvent.type(search, "review");
-  await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => url.includes("q=review"))).toBe(true));
+  await waitFor(() =>
+    expect(fetchMock.mock.calls.some(([url]) => url.includes("q=review"))).toBe(
+      true,
+    ),
+  );
   expect(search).toHaveFocus();
   await userEvent.keyboard("{Escape}");
   expect(search).toHaveValue("");

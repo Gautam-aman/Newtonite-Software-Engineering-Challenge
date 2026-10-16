@@ -1,5 +1,5 @@
-import { createContext,useContext } from "react";
-import type { Team,User } from "./api";
+import { createContext, useContext } from "react";
+import type { Team, User } from "./api";
 export interface Session {
   user: User;
   teams: Team[];

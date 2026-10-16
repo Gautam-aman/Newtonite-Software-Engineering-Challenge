@@ -1,38 +1,38 @@
 import { useQuery } from "@tanstack/react-query";
 import {
-Activity as ActivityIcon,
-ArrowRight,
-ArrowUpRight,
-Calendar,
-CheckCheck,
-ChevronRight,
-CircleDashed,
-Clock,
-ListFilter,
-Plus,
-RefreshCw,
-ShieldCheck,
-Sparkles,
-UserRound,
-Zap,
+  Activity as ActivityIcon,
+  ArrowRight,
+  ArrowUpRight,
+  Calendar,
+  CheckCheck,
+  ChevronRight,
+  CircleDashed,
+  Clock,
+  ListFilter,
+  Plus,
+  RefreshCw,
+  ShieldCheck,
+  Sparkles,
+  UserRound,
+  Zap,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { api,label,params,statuses,type Item,type Summary } from "../api";
+import { api, label, params, statuses, type Item, type Summary } from "../api";
 import { EventGlyph } from "../events";
-import { AnimatedNumber,motionTokens,Stagger,StaggerItem } from "../motion";
+import { AnimatedNumber, motionTokens, Stagger, StaggerItem } from "../motion";
 import { useSession } from "../session";
 import {
-Empty,
-ErrorBox,
-Loading,
-PageEnter,
-PriorityMark,
-shortId,
+  Empty,
+  ErrorBox,
+  Loading,
+  PageEnter,
+  PriorityMark,
+  shortId,
 } from "../ui";
 
-import { eventLabel,relativeTime } from "../event-text";
+import { eventLabel, relativeTime } from "../event-text";
 import { useItems } from "../queries";
 function ItemLine({ item }: { item: Item }) {
   return (
@@ -394,7 +394,10 @@ export function Dashboard() {
                     }}
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
-                    transition={{ duration: motionTokens.numeric, ease: motionTokens.ease }}
+                    transition={{
+                      duration: motionTokens.numeric,
+                      ease: motionTokens.ease,
+                    }}
                   />
                 ) : null;
               })}

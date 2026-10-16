@@ -72,7 +72,18 @@
         const width = page.documentElement.scrollWidth;
         report.textContent = `${viewport}px viewport · ${width}px document · ${width <= viewport ? "No horizontal overflow" : "OVERFLOW"}`;
         report.dataset.viewport = viewport;
-          report.dataset.overflow=JSON.stringify(Array.from(page.querySelectorAll('body *')).map(element=>({tag:element.tagName,cls:element.className?.toString(),right:Math.round(element.getBoundingClientRect().right),left:Math.round(element.getBoundingClientRect().left)})).filter(box=>box.right>viewport+1&&box.left>=0).sort((a,b)=>b.right-a.right).slice(0,8));
+        report.dataset.overflow = JSON.stringify(
+          Array.from(page.querySelectorAll("body *"))
+            .map((element) => ({
+              tag: element.tagName,
+              cls: element.className?.toString(),
+              right: Math.round(element.getBoundingClientRect().right),
+              left: Math.round(element.getBoundingClientRect().left),
+            }))
+            .filter((box) => box.right > viewport + 1 && box.left >= 0)
+            .sort((a, b) => b.right - a.right)
+            .slice(0, 8),
+        );
         report.dataset.documentWidth = width;
         const scale = Math.min(1, (window.innerWidth - 24) / viewport);
         frame.style.transformOrigin = "top left";

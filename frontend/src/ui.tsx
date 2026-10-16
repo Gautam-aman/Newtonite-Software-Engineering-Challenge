@@ -1,27 +1,28 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import {
-AlertCircle,
-ArrowDown,
-ArrowUp,
-Check,
-ChevronsUp,
-LoaderCircle,
-LockKeyhole,
-Minus,
-RefreshCw,
-WifiOff,
-X,
+  AlertCircle,
+  ArrowDown,
+  ArrowUp,
+  Check,
+  ChevronsUp,
+  LoaderCircle,
+  LockKeyhole,
+  Minus,
+  RefreshCw,
+  WifiOff,
+  X,
 } from "lucide-react";
-import { AnimatePresence,motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import {
-Component,createContext,
-useContext,
-useEffect,
-useRef,
-useState,
-type ReactNode
+  Component,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
 } from "react";
-import { ApiError,label,type Item,type Priority,type Status } from "./api";
+import { ApiError, label, type Item, type Priority, type Status } from "./api";
 import { motionTokens } from "./motion";
 import { useMotionPreference } from "./motion-preferences";
 export const ToastContext = createContext<(message: string) => void>(() => {});
@@ -189,11 +190,19 @@ export function Modal({
                 transition={{ duration: motionTokens.fast }}
               />
             </Dialog.Overlay>
-            <Dialog.Content forceMount asChild
-              onOpenAutoFocus={() => { opener.current = document.activeElement as HTMLElement; }}
+            <Dialog.Content
+              forceMount
+              asChild
+              onOpenAutoFocus={() => {
+                opener.current = document.activeElement as HTMLElement;
+              }}
               onCloseAutoFocus={(event) => {
                 event.preventDefault();
-                if (document.activeElement === document.body && opener.current?.isConnected) opener.current.focus();
+                if (
+                  document.activeElement === document.body &&
+                  opener.current?.isConnected
+                )
+                  opener.current.focus();
               }}
             >
               <motion.div
@@ -346,8 +355,34 @@ export function Toast({
   );
 }
 
-export class ScreenBoundary extends Component<{children:ReactNode},{failed:boolean}> {
- state={failed:false};
- static getDerivedStateFromError(){return {failed:true}}
- render(){return this.state.failed?<main className="screen-recovery"><span className="empty-icon"><RefreshCw size={23}/></span><h1>The workspace could not finish loading.</h1><p>A screen or resource could not be loaded. Reload the workspace, then sign in again.</p><button className="button primary" onClick={()=>window.location.reload()}>Reload workspace</button></main>:this.props.children}
+export class ScreenBoundary extends Component<
+  { children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? (
+      <main className="screen-recovery">
+        <span className="empty-icon">
+          <RefreshCw size={23} />
+        </span>
+        <h1>The workspace could not finish loading.</h1>
+        <p>
+          A screen or resource could not be loaded. Reload the workspace, then
+          sign in again.
+        </p>
+        <button
+          className="button primary"
+          onClick={() => window.location.reload()}
+        >
+          Reload workspace
+        </button>
+      </main>
+    ) : (
+      this.props.children
+    );
+  }
 }

@@ -1,10 +1,10 @@
-import { Moon,Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import {
-createContext,
-useContext,
-useEffect,
-useState,
-type ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
 } from "react";
 
 type Theme = "dark" | "light";
@@ -24,7 +24,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   });
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content",theme==="dark"?"#0c1019":"#f6f7fb");
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", theme === "dark" ? "#0c1019" : "#f6f7fb");
     try {
       window.localStorage.setItem("newtonops-theme", theme);
     } catch {
