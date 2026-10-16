@@ -39,6 +39,28 @@ public class Errors {
         .body(new Error("BAD_REQUEST", "Invalid or missing request values.", Map.of()));
   }
 
+  @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+  ResponseEntity<Error> missing(Exception e) {
+    return ResponseEntity.status(404)
+        .body(new Error("NOT_FOUND", "The requested endpoint was not found.", Map.of()));
+  }
+
+  @ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
+  ResponseEntity<Error> method(Exception e) {
+    return ResponseEntity.status(405)
+        .body(
+            new Error(
+                "METHOD_NOT_ALLOWED", "This method is not supported for this endpoint.", Map.of()));
+  }
+
+  @ExceptionHandler(org.springframework.web.HttpMediaTypeNotSupportedException.class)
+  ResponseEntity<Error> media(Exception e) {
+    return ResponseEntity.status(415)
+        .body(
+            new Error(
+                "UNSUPPORTED_MEDIA_TYPE", "Send this request as application/json.", Map.of()));
+  }
+
   @ExceptionHandler(DataAccessException.class)
   ResponseEntity<Error> database(DataAccessException e) {
     LoggerFactory.getLogger(Errors.class).error("Database operation failed", e);

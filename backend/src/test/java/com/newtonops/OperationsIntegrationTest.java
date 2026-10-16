@@ -361,6 +361,9 @@ class OperationsIntegrationTest {
     String prefix = "Pagination " + UUID.randomUUID();
     for (int n = 0; n < 5; n++)
       service.create(member, body(prefix + " " + n), UUID.randomUUID().toString());
+    // Equal timestamps exercise the UUID tie-breaker, not just timestamp ordering.
+    db.update(
+        "UPDATE work_items SET created_at='2026-01-01T00:00:00Z' WHERE title LIKE ?", prefix + "%");
     var first =
         service.list(
             member,
@@ -454,6 +457,43 @@ class OperationsIntegrationTest {
                 null,
                 20));
     assertThat(page.items()).extracting(Item::id).contains(i.id());
+  }
+
+  @Test
+  void leadAuthorityDoesNotCarryAcrossTeams() {
+    UUID customerTeam = DemoSeed.id("Customer Experience");
+    var created =
+        service.create(
+            lead,
+            new Create(
+                "Team-local role " + UUID.randomUUID(),
+                "Review",
+                Type.TASK,
+                Priority.MEDIUM,
+                customerTeam,
+                null),
+            UUID.randomUUID().toString());
+    service.claim(lead, created.id(), 0);
+    service.transition(lead, created.id(), new Transition(1L, Status.IN_PROGRESS));
+    service.transition(lead, created.id(), new Transition(2L, Status.AWAITING_APPROVAL));
+    denied(() -> service.transition(lead, created.id(), new Transition(3L, Status.RESOLVED)), 403);
+    assertThat(service.get(lead, created.id()).status()).isEqualTo(Status.AWAITING_APPROVAL);
+  }
+
+  @Test
+  void frameworkErrorsUseTheDocumentedHttpContract() throws Exception {
+    var token = (String) auth.login(member.email(), "NewtonOps!2026").get("token");
+    mvc.perform(get("/api/does-not-exist").header("Authorization", "Bearer " + token))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.code").value("NOT_FOUND"));
+    mvc.perform(put("/api/items").header("Authorization", "Bearer " + token))
+        .andExpect(status().isMethodNotAllowed());
+    mvc.perform(
+            post("/api/items")
+                .header("Authorization", "Bearer " + token)
+                .contentType("text/plain")
+                .content("invalid"))
+        .andExpect(status().isUnsupportedMediaType());
   }
 
   @Test

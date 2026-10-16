@@ -2506,3 +2506,33 @@ tr:hover td {
     scroll-behavior: auto !important;
   }
 }
+
+.event-details {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #6b795d;
+}
+.event-details summary {
+  cursor: pointer;
+  padding: 4px 0;
+}
+.event-details pre {
+  max-height: 260px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 12px;
+  border: 1px solid #e6ecdd;
+  background: #f8faf4;
+  border-radius: 6px;
+  font-size: 10px;
+  line-height: 1.7;
+}
+@media (max-width: 760px) {
+  .sidebar {
+    visibility: hidden;
+  }
+  .sidebar.mobile-open {
+    visibility: visible;
+  }
+}

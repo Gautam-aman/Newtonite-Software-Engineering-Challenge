@@ -1010,6 +1010,10 @@ export function Detail() {
                           </small>
                         )}
                         <time>{new Date(e.createdAt).toLocaleString()}</time>
+                        <details className="event-details">
+                          <summary>View recorded changes</summary>
+                          <pre>{JSON.stringify(e.details, null, 2)}</pre>
+                        </details>
                       </div>
                     </motion.div>
                   ))}

@@ -24,3 +24,7 @@ management:
       show-details: never
 newtonops:
   seed: ${DEMO_SEED:true}
+logging:
+  structured:
+    format:
+      console: ecs
