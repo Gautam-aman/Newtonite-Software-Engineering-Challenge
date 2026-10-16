@@ -989,16 +989,11 @@ export function Detail() {
                     <motion.div
                       key={e.id}
                       className="timeline-event"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
+                      initial={{ opacity: 0, y:8 }}
+                      animate={{ opacity: 1, y:0 }}
+                      transition={{duration:.22}}
                     >
-                      <span className="timeline-dot">
-                        {e.eventType === "APPROVED" ? (
-                          <ShieldCheck size={13} />
-                        ) : (
-                          <ActivityIcon size={12} />
-                        )}
-                      </span>
+                      <EventGlyph type={e.eventType}/>
                       <div>
                         <p>
                           <strong>{e.actorName}</strong>{" "}
