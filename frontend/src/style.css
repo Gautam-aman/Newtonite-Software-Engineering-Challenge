@@ -2814,3 +2814,4 @@ tr:hover td {
 .recent-event {position:relative;padding:17px 8px;border-radius:8px;}.recent-event:hover {background:var(--surface-hover);}.recent-event:before {content:'';position:absolute;left:22px;top:44px;bottom:-15px;border-left:1px solid var(--border);}.recent-list>div:last-child .recent-event:before {display:none;}
 .overview-tools {display:flex;align-items:center;gap:9px;}.overview-tools>.button {font-size:11px;}
 @media(max-width:480px){.overview-tools .button {padding:8px;font-size:0;gap:0;}.overview-tools .button svg {width:15px;}}
+.view-tabs button.active {border-bottom-color:transparent;}.tab-indicator {position:absolute;height:2px;bottom:-1px;left:0;right:0;background:var(--accent);box-shadow:0 -2px 10px var(--accent-soft);border-radius:3px 3px 0 0;}

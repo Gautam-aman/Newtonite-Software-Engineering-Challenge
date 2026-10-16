@@ -34,7 +34,7 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { LayoutGroup, motion } from "motion/react";
 import {
   api,
   ApiError,
@@ -486,7 +486,7 @@ export function Explorer() {
           </button>
         )}
       </div>
-      <div className="view-tabs">
+      <LayoutGroup id="work-views"><div className="view-tabs">
         {[
           ["", "All work"],
           ["mine", "Assigned to me"],
@@ -500,10 +500,10 @@ export function Explorer() {
             onClick={() => filter("view", value)}
           >
             {name}
-            {view === value && <span className="tab-dot" />}
+            {view === value && <motion.span className="tab-indicator" layoutId="work-view" transition={{type:"spring",stiffness:400,damping:34}}/>}
           </button>
         ))}
-      </div>
+      </div></LayoutGroup>
       <section className="panel explorer">
         <div className="filter-bar">
           <div className="search-field">
