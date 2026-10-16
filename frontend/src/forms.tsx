@@ -136,7 +136,7 @@ export function ItemForm({
     >
       <form
         onSubmit={form.handleSubmit((v) => mutation.mutate(v))}
-        className="item-form"
+        className="item-form" aria-busy={mutation.isPending}
       >
         <label>
           <span className="field-label-row"><span>Title <span className="required">*</span></span><span className="field-count">{form.watch("title").length} / 180</span></span>
@@ -144,26 +144,26 @@ export function ItemForm({
             autoFocus aria-label="Title"
             placeholder="What needs to happen?"
             {...form.register("title")}
-            maxLength={180}
-            aria-invalid={!!error("title")}
+            maxLength={180} readOnly={mutation.isPending}
+            aria-invalid={!!error("title")} aria-describedby={error("title")?"item-title-error":undefined}
           />
           {error("title") && (
-            <small className="field-error">{error("title")}</small>
+            <small className="field-error" id="item-title-error" role="alert">{error("title")}</small>
           )}
         </label>
         <label>
           <span className="field-label-row"><span>Description</span><span className="field-count">{form.watch("description").length.toLocaleString()} / 10,000</span></span>
-          <textarea aria-label="Description"
+          <textarea aria-label="Description" aria-describedby="item-description-hint"
             rows={4}
             placeholder="Add context, impact, and what success looks like…"
             {...form.register("description")}
-            maxLength={10000}
+            maxLength={10000} readOnly={mutation.isPending}
           />
-          <small className="field-hint">
+          <small className="field-hint" id="item-description-hint">
             A little context makes the next handoff easier.
           </small>
         </label>
-        <div className="form-grid">
+        <fieldset className="form-grid" disabled={mutation.isPending}>
           <label>
             Team
             <select {...form.register("teamId")} disabled={!!item}>
@@ -219,7 +219,7 @@ export function ItemForm({
               </select>
             </label>
           )}
-        </div>
+        </fieldset>
         {mutation.isError && (
           <ErrorBox
             error={mutation.error}
