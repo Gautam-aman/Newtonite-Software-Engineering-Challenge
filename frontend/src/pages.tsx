@@ -879,6 +879,7 @@ export function Detail() {
           </button>
         )}
       </div>
+      <ol className="workflow-rail" aria-label="Workflow progress">{statuses.map((status,index)=>{const current=statuses.indexOf(item.status);return <li key={status} aria-current={item.status===status?"step":undefined} className={index<current?"passed":index===current?"current":"upcoming"}><span>{index<current?<CheckCheck size={13}/>:index+1}</span><strong>{label(status)}</strong></li>})}</ol>
       {mutation.isError && <ErrorBox error={mutation.error} retry={refresh} />}
       <div className="detail-grid">
         <div className="detail-main">
