@@ -908,22 +908,11 @@ export function Detail() {
                 retry={() => void comments.refetch()}
               />
             ) : comments.data?.pages.flatMap((p) => p.items).length ? (
-              <div className="comment-list">
-                {comments.data.pages
-                  .flatMap((p) => p.items)
-                  .map((c) => (
-                    <div key={c.id} className="comment">
-                      <Avatar name={c.actorName} />
-                      <div>
-                        <p>
-                          <strong>{c.actorName}</strong>
-                          <time>{relativeTime(c.createdAt)}</time>
-                        </p>
-                        <div>{c.body}</div>
-                      </div>
-                    </div>
-                  ))}
-              </div>
+              <div className="comment-list"><AnimatePresence initial={false}>
+                {comments.data.pages.flatMap(p=>p.items).map(c=><motion.div key={c.id} className="comment" initial={{opacity:0,y:9}} animate={{opacity:1,y:0}} transition={{duration:.22}}>
+                  <Avatar name={c.actorName}/><div><p><strong>{c.actorName}</strong><time>{relativeTime(c.createdAt)}</time></p><div>{c.body}</div></div>
+                </motion.div>)}
+              </AnimatePresence></div>
             ) : (
               <div className="conversation-empty">
                 <MessageSquare size={22} />
@@ -942,7 +931,7 @@ export function Detail() {
             )}
             {role !== "VIEWER" && item.status !== "CLOSED" && (
               <form
-                className="comment-form"
+                className="comment-form" aria-busy={mutation.isPending && mutation.variables?.action==="comments"}
                 onSubmit={(e) => {
                   e.preventDefault();
                   mutation.mutate({ action: "comments" });
@@ -951,7 +940,7 @@ export function Detail() {
                 <Avatar name={user.name} />
                 <div>
                   <textarea
-                    aria-label="Add a comment"
+                    aria-label="Add a comment" disabled={mutation.isPending && mutation.variables?.action==="comments"}
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     placeholder="Share an update with the team…"
