@@ -35,7 +35,7 @@ import {
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { api, setToken, type Team, type User } from "./api";
-import { Avatar, ErrorBox, Loading, Spinner, ToastContext } from "./ui";
+import { Avatar, ErrorBox, Loading, ActionLabel, ToastContext } from "./ui";
 import { Dashboard, Explorer, Detail } from "./pages";
 import { ItemForm } from "./forms";
 import { ThemeProvider, ThemeToggle } from "./theme";
@@ -151,15 +151,8 @@ function Login({ onLogin }: { onLogin: (u: User) => void }) {
               /><button type="button" className="icon-button" aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword} onClick={()=>setShowPassword(v=>!v)}>{showPassword ? <EyeOff size={17}/> : <Eye size={17}/>}</button></div>
             </label>
             {!!error && <ErrorBox error={error} />}
-            <button className="button primary full" disabled={busy}>
-              {busy ? (
-                <Spinner />
-              ) : (
-                <>
-                  Sign in to NewtonOps
-                  <ArrowUpRight size={16} />
-                </>
-              )}
+            <button className="button primary full" disabled={busy} aria-busy={busy}>
+              <ActionLabel pending={busy} loadingText="Signing in…">Sign in to NewtonOps<ArrowUpRight size={16}/></ActionLabel>
             </button>
           </form>
           <div className="demo-box">

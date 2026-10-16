@@ -231,3 +231,7 @@ export function overdue(item: Item) {
 export function shortId(id: string) {
   return "OPS-" + id.slice(0, 6).toUpperCase();
 }
+
+export function ActionLabel({pending,children,loadingText="Saving…"}:{pending:boolean;children:ReactNode;loadingText?:string}) {
+ return <span className="action-label"><motion.span className="action-label-idle" aria-hidden={pending} animate={{opacity:pending?0:1}} transition={{duration:motionTokens.fast}}>{children}</motion.span><AnimatePresence initial={false}>{pending&&<motion.span className="action-label-pending" initial={{opacity:0,y:3}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:motionTokens.fast}}><span aria-hidden="true"><Spinner/></span>{loadingText}</motion.span>}</AnimatePresence></span>;
+}

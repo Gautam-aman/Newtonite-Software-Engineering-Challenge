@@ -13,7 +13,7 @@ import {
   type Member,
 } from "./api";
 import { useSession } from "./App";
-import { Avatar, ErrorBox, Modal, Spinner } from "./ui";
+import { Avatar, ErrorBox, Modal, ActionLabel } from "./ui";
 const schema = z.object({
   title: z.string().trim().min(1, "Give this item a clear title.").max(180),
   description: z.string().max(10000),
@@ -250,13 +250,7 @@ export function ItemForm({
             className="button primary"
             disabled={mutation.isPending || !watchedTeam}
           >
-            {mutation.isPending ? (
-              <Spinner />
-            ) : item ? (
-              "Save changes"
-            ) : (
-              "Create item"
-            )}
+            <ActionLabel pending={mutation.isPending} loadingText={item?"Saving…":"Creating…"}>{item?"Save changes":"Create item"}</ActionLabel>
           </button>
         </div>
       </form>
