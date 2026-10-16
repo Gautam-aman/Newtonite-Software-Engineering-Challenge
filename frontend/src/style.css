@@ -2838,3 +2838,11 @@ fieldset.form-grid {padding:0;border:0;min-width:0;}input[aria-invalid=true] {bo
 @media(max-width:800px){.icon-button,.icon-link {min-width:40px;min-height:40px;}.button {min-height:40px;}.view-tabs button {min-height:44px;}.filter-controls select {min-height:40px;}}
 @media(max-width:480px){.breadcrumb {display:none;}.mobile-menu {min-height:44px;min-width:44px;margin-right:0;}.header-actions .icon-button {min-width:40px;min-height:40px;}.header-actions>.button {min-height:40px;min-width:40px;}.pagination .button {min-height:40px;}.demo-roles button {min-height:40px;}.date-shortcuts button {min-height:32px;}}
 .screen-recovery {max-width:570px;margin:15vh auto;padding:35px;text-align:center;}.screen-recovery h1 {font-size:24px;letter-spacing:-.7px;line-height:1.5;}.screen-recovery p {font-size:13px;line-height:1.9;color:var(--text-secondary);margin:15px 0 25px;}
+
+/* Sidebar interpolation must not carry desktop margins into a phone viewport. */
+@media (max-width: 800px) {
+  .workspace-main { transition: none; }
+}
+@media (max-width: 600px) {
+  .banner-graphic { display: none; }
+}
