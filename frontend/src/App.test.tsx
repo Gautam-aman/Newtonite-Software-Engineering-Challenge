@@ -1,8 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup,render,screen,waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import App, { client } from "./App";
-import { api, ApiError, setToken, transitions, type Item } from "./api";
+import { afterEach,beforeEach,describe,expect,it,vi } from "vitest";
+import App,{ client } from "./App";
+import { api,ApiError,setToken,transitions,type Item } from "./api";
 const team = { id: "team-1", name: "Platform Operations", role: "MEMBER" };
 const user = {
   id: "user-1",
@@ -42,7 +42,9 @@ function response(body: unknown, status = 200) {
 beforeEach(() => {
   window.history.replaceState({}, "", "/");
   client.clear();
-  client.setDefaultOptions({queries:{...client.getDefaultOptions().queries,retry:false}});
+  client.setDefaultOptions({
+    queries: { ...client.getDefaultOptions().queries, retry: false },
+  });
   setToken(null);
   conflict = false;
   unavailable = false;
@@ -157,7 +159,7 @@ describe("connected workspace", () => {
   it("creates an item with validation, an idempotency key and real API data", async () => {
     await signIn();
     await userEvent.click(screen.getByRole("button", { name: "New item" }));
-    await userEvent.click(screen.getByRole("button", { name: "Create item" }));
+    await userEvent.click(await screen.findByRole("button", { name: "Create item" }));
     expect(
       await screen.findByText("Give this item a clear title."),
     ).toBeInTheDocument();
@@ -165,7 +167,7 @@ describe("connected workspace", () => {
       screen.getByPlaceholderText("What needs to happen?"),
       "Review settlement",
     );
-    await userEvent.click(screen.getByRole("button", { name: "Create item" }));
+    await userEvent.click(await screen.findByRole("button", { name: "Create item" }));
     await waitFor(() => expect(writes).toHaveLength(1));
     expect(writes[0]).toMatchObject({
       title: "Review settlement",
@@ -234,9 +236,7 @@ describe("connected workspace", () => {
       "Please retry shortly.",
     );
     unavailable = false;
-    await userEvent.click(
-      screen.getByRole("button", { name: "Try again" }),
-    );
+    await userEvent.click(screen.getByRole("button", { name: "Try again" }));
     expect((await screen.findAllByText("12")).length).toBeGreaterThan(0);
   });
 });

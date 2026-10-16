@@ -1,11 +1,11 @@
+import { Moon,Sun } from "lucide-react";
 import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
+createContext,
+useContext,
+useEffect,
+useState,
+type ReactNode,
 } from "react";
-import { Moon, Sun } from "lucide-react";
 
 type Theme = "dark" | "light";
 const ThemeContext = createContext<{ theme: Theme; toggle: () => void }>({

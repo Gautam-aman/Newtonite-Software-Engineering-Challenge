@@ -1,19 +1,19 @@
-import { useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation,useQuery,useQueryClient } from "@tanstack/react-query";
+import { useEffect,useRef } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  api,
-  isLead,
-  label,
-  priorities,
-  types,
-  type Item,
-  type Member,
+api,
+isLead,
+label,
+priorities,
+types,
+type Item,
+type Member,
 } from "./api";
-import { useSession } from "./App";
-import { Avatar, ErrorBox, Modal, ActionLabel } from "./ui";
+import { useSession } from "./session";
+import { ActionLabel,Avatar,ErrorBox,Modal } from "./ui";
 const schema = z.object({
   title: z.string().trim().min(1, "Give this item a clear title.").max(180),
   description: z.string().max(10000),
@@ -136,28 +136,49 @@ export function ItemForm({
     >
       <form
         onSubmit={form.handleSubmit((v) => mutation.mutate(v))}
-        className="item-form" aria-busy={mutation.isPending}
+        className="item-form"
+        aria-busy={mutation.isPending}
       >
         <label>
-          <span className="field-label-row"><span>Title <span className="required">*</span></span><span className="field-count">{form.watch("title").length} / 180</span></span>
+          <span className="field-label-row">
+            <span>
+              Title <span className="required">*</span>
+            </span>
+            <span className="field-count">
+              {form.watch("title").length} / 180
+            </span>
+          </span>
           <input
-            autoFocus aria-label="Title"
+            autoFocus
+            aria-label="Title"
             placeholder="What needs to happen?"
             {...form.register("title")}
-            maxLength={180} readOnly={mutation.isPending}
-            aria-invalid={!!error("title")} aria-describedby={error("title")?"item-title-error":undefined}
+            maxLength={180}
+            readOnly={mutation.isPending}
+            aria-invalid={!!error("title")}
+            aria-describedby={error("title") ? "item-title-error" : undefined}
           />
           {error("title") && (
-            <small className="field-error" id="item-title-error" role="alert">{error("title")}</small>
+            <small className="field-error" id="item-title-error" role="alert">
+              {error("title")}
+            </small>
           )}
         </label>
         <label>
-          <span className="field-label-row"><span>Description</span><span className="field-count">{form.watch("description").length.toLocaleString()} / 10,000</span></span>
-          <textarea aria-label="Description" aria-describedby="item-description-hint"
+          <span className="field-label-row">
+            <span>Description</span>
+            <span className="field-count">
+              {form.watch("description").length.toLocaleString()} / 10,000
+            </span>
+          </span>
+          <textarea
+            aria-label="Description"
+            aria-describedby="item-description-hint"
             rows={4}
             placeholder="Add context, impact, and what success looks like…"
             {...form.register("description")}
-            maxLength={10000} readOnly={mutation.isPending}
+            maxLength={10000}
+            readOnly={mutation.isPending}
           />
           <small className="field-hint" id="item-description-hint">
             A little context makes the next handoff easier.
@@ -204,7 +225,35 @@ export function ItemForm({
           </label>
           <label>
             Due date
-            <input type="date" aria-label="Due date" {...form.register("dueDate")} /><span className="date-shortcuts"><button type="button" className="text-button" onClick={()=>form.setValue("dueDate",new Date().toLocaleDateString("en-CA"),{shouldDirty:true})}>Today</button><button type="button" className="text-button" onClick={()=>form.setValue("dueDate","",{shouldDirty:true})}>Clear</button></span>
+            <input
+              type="date"
+              aria-label="Due date"
+              {...form.register("dueDate")}
+            />
+            <span className="date-shortcuts">
+              <button
+                type="button"
+                className="text-button"
+                onClick={() =>
+                  form.setValue(
+                    "dueDate",
+                    new Date().toLocaleDateString("en-CA"),
+                    { shouldDirty: true },
+                  )
+                }
+              >
+                Today
+              </button>
+              <button
+                type="button"
+                className="text-button"
+                onClick={() =>
+                  form.setValue("dueDate", "", { shouldDirty: true })
+                }
+              >
+                Clear
+              </button>
+            </span>
           </label>
           {item && (
             <label className="span-two">
@@ -217,7 +266,29 @@ export function ItemForm({
                   </option>
                 ))}
               </select>
-              {form.watch("assigneeId") && <span className="selected-assignee"><Avatar name={members.data?.find(m=>m.id===form.watch("assigneeId"))?.name??item.assigneeName??"Team member"}/><span>{members.data?.find(m=>m.id===form.watch("assigneeId"))?.name??item.assigneeName}</span><small>{members.data?.find(m=>m.id===form.watch("assigneeId"))?.role.toLowerCase()}</small></span>}
+              {form.watch("assigneeId") && (
+                <span className="selected-assignee">
+                  <Avatar
+                    name={
+                      members.data?.find(
+                        (m) => m.id === form.watch("assigneeId"),
+                      )?.name ??
+                      item.assigneeName ??
+                      "Team member"
+                    }
+                  />
+                  <span>
+                    {members.data?.find(
+                      (m) => m.id === form.watch("assigneeId"),
+                    )?.name ?? item.assigneeName}
+                  </span>
+                  <small>
+                    {members.data
+                      ?.find((m) => m.id === form.watch("assigneeId"))
+                      ?.role.toLowerCase()}
+                  </small>
+                </span>
+              )}
             </label>
           )}
         </fieldset>
@@ -250,7 +321,12 @@ export function ItemForm({
             className="button primary"
             disabled={mutation.isPending || !watchedTeam}
           >
-            <ActionLabel pending={mutation.isPending} loadingText={item?"Saving…":"Creating…"}>{item?"Save changes":"Create item"}</ActionLabel>
+            <ActionLabel
+              pending={mutation.isPending}
+              loadingText={item ? "Saving…" : "Creating…"}
+            >
+              {item ? "Save changes" : "Create item"}
+            </ActionLabel>
           </button>
         </div>
       </form>

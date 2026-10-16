@@ -1,22 +1,28 @@
-import { useMotionPreference } from "./motion-preferences";
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import {
-  AlertCircle,
-  LockKeyhole,
-  WifiOff,
-  ArrowDown,
-  ArrowUp,
-  Check,
-  ChevronsUp,
-  Minus,
-  RefreshCw,
-  X,
-  LoaderCircle,
-} from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { AnimatePresence, motion } from "motion/react";
+import {
+AlertCircle,
+ArrowDown,
+ArrowUp,
+Check,
+ChevronsUp,
+LoaderCircle,
+LockKeyhole,
+Minus,
+RefreshCw,
+WifiOff,
+X,
+} from "lucide-react";
+import { AnimatePresence,motion } from "motion/react";
+import {
+createContext,
+useContext,
+useEffect,
+useState,
+type ReactNode,
+} from "react";
+import { ApiError,label,type Item,type Priority,type Status } from "./api";
 import { motionTokens } from "./motion";
-import { ApiError, label, type Item, type Priority, type Status } from "./api";
+import { useMotionPreference } from "./motion-preferences";
 export const ToastContext = createContext<(message: string) => void>(() => {});
 export const useToast = () => useContext(ToastContext);
 export function Avatar({
@@ -90,13 +96,20 @@ export function ErrorBox({
   error: unknown;
   retry?: () => void;
 }) {
-  const conflict=error instanceof ApiError && error.status===409;
-  const forbidden=error instanceof ApiError && error.status===403;
-  const network=error instanceof ApiError && error.status===0;
-  const Icon=conflict?RefreshCw:forbidden?LockKeyhole:network?WifiOff:AlertCircle;
+  const conflict = error instanceof ApiError && error.status === 409;
+  const forbidden = error instanceof ApiError && error.status === 403;
+  const network = error instanceof ApiError && error.status === 0;
+  const Icon = conflict
+    ? RefreshCw
+    : forbidden
+      ? LockKeyhole
+      : network
+        ? WifiOff
+        : AlertCircle;
   return (
     <motion.div
-      className="error-box" data-tone={conflict?"warning":forbidden?"info":"danger"}
+      className="error-box"
+      data-tone={conflict ? "warning" : forbidden ? "info" : "danger"}
       role="alert"
       initial={{ opacity: 0, y: -5 }}
       animate={{ opacity: 1, y: 0 }}
@@ -109,13 +122,15 @@ export function ErrorBox({
             ? "This item changed"
             : error instanceof ApiError && error.status === 403
               ? "This workspace is restricted"
-              : network ? "Connection interrupted" : "Unable to complete this request"}
+              : network
+                ? "Connection interrupted"
+                : "Unable to complete this request"}
         </strong>
         <p>{error instanceof Error ? error.message : "Please try again."}</p>
         {retry && (
           <button className="text-button" onClick={retry}>
             <RefreshCw size={14} />
-            {conflict?"Refresh latest data":"Try again"}
+            {conflict ? "Refresh latest data" : "Try again"}
           </button>
         )}
       </div>
@@ -232,13 +247,93 @@ export function shortId(id: string) {
   return "OPS-" + id.slice(0, 6).toUpperCase();
 }
 
-export function ActionLabel({pending,children,loadingText="Saving…"}:{pending:boolean;children:ReactNode;loadingText?:string}) {
- return <span className="action-label"><motion.span className="action-label-idle" aria-hidden={pending} animate={{opacity:pending?0:1}} transition={{duration:motionTokens.fast}}>{children}</motion.span><AnimatePresence initial={false}>{pending&&<motion.span className="action-label-pending" initial={{opacity:0,y:3}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:motionTokens.fast}}><span aria-hidden="true"><Spinner/></span>{loadingText}</motion.span>}</AnimatePresence></span>;
+export function ActionLabel({
+  pending,
+  children,
+  loadingText = "Saving…",
+}: {
+  pending: boolean;
+  children: ReactNode;
+  loadingText?: string;
+}) {
+  return (
+    <span className="action-label">
+      <motion.span
+        className="action-label-idle"
+        aria-hidden={pending}
+        animate={{ opacity: pending ? 0 : 1 }}
+        transition={{ duration: motionTokens.fast }}
+      >
+        {children}
+      </motion.span>
+      <AnimatePresence initial={false}>
+        {pending && (
+          <motion.span
+            className="action-label-pending"
+            initial={{ opacity: 0, y: 3 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: motionTokens.fast }}
+          >
+            <span aria-hidden="true">
+              <Spinner />
+            </span>
+            {loadingText}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </span>
+  );
 }
 
-export function Toast({message,onDismiss}:{message:string;onDismiss:()=>void}) {
- const [paused,setPaused]=useState(false);
- useEffect(()=>{if(paused)return;const timer=setTimeout(onDismiss,5000);return()=>clearTimeout(timer)},[paused,onDismiss]);
- useEffect(()=>{const visibility=()=>setPaused(document.hidden);document.addEventListener("visibilitychange",visibility);return()=>document.removeEventListener("visibilitychange",visibility)},[]);
- return <motion.div role="status" className="toast" onPointerEnter={()=>setPaused(true)} onPointerLeave={()=>setPaused(false)} onFocus={()=>setPaused(true)} onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget))setPaused(false)}} initial={{opacity:0,y:20,scale:.98}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:8}} transition={motionTokens.spring}><span aria-hidden="true"><Check size={16}/></span><div><strong>Update confirmed</strong><p>{message}</p></div><button className="icon-button" onClick={onDismiss} aria-label="Dismiss notification"><X size={15}/></button></motion.div>;
+export function Toast({
+  message,
+  onDismiss,
+}: {
+  message: string;
+  onDismiss: () => void;
+}) {
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused) return;
+    const timer = setTimeout(onDismiss, 5000);
+    return () => clearTimeout(timer);
+  }, [paused, onDismiss]);
+  useEffect(() => {
+    const visibility = () => setPaused(document.hidden);
+    document.addEventListener("visibilitychange", visibility);
+    return () => document.removeEventListener("visibilitychange", visibility);
+  }, []);
+  return (
+    <motion.div
+      role="status"
+      className="toast"
+      onPointerEnter={() => setPaused(true)}
+      onPointerLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget))
+          setPaused(false);
+      }}
+      initial={{ opacity: 0, y: 20, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 8 }}
+      transition={motionTokens.spring}
+    >
+      <span aria-hidden="true">
+        <Check size={16} />
+      </span>
+      <div>
+        <strong>Update confirmed</strong>
+        <p>{message}</p>
+      </div>
+      <button
+        className="icon-button"
+        onClick={onDismiss}
+        aria-label="Dismiss notification"
+      >
+        <X size={15} />
+      </button>
+    </motion.div>
+  );
 }
