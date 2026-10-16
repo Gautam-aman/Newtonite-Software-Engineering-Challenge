@@ -2809,3 +2809,6 @@ tr:hover td {
 .queue-grid>div { min-width:0; }.queue { height:100%; display:flex; flex-direction:column; }.queue>.empty { flex:1; display:flex; flex-direction:column; justify-content:center; }.queue>.panel-footer { margin-top:auto; }
 .distribution-track { display:flex; gap:4px; height:11px; margin:22px 0 25px; overflow:hidden; border-radius:6px; background:var(--surface-hover); }
 .distribution-track>span { height:100%; border-radius:2px; transform-origin:left; min-width:2px; }
+.event-glyph {display:grid;place-items:center;width:29px;height:29px;flex-shrink:0;color:var(--accent);background:var(--accent-soft);border:1px solid var(--border);border-radius:9px;position:relative;z-index:1;}
+.event-glyph[data-event=APPROVED] {color:var(--success);background:var(--success-bg);}.event-glyph[data-event=REJECTED] {color:var(--danger);background:var(--danger-bg);}.event-glyph[data-event=CLAIMED] {color:var(--info);background:var(--info-bg);}.event-glyph[data-event=COMMENTED] {color:var(--warning);background:var(--warning-bg);}
+.recent-event {position:relative;padding:17px 8px;border-radius:8px;}.recent-event:hover {background:var(--surface-hover);}.recent-event:before {content:'';position:absolute;left:22px;top:44px;bottom:-15px;border-left:1px solid var(--border);}.recent-list>div:last-child .recent-event:before {display:none;}

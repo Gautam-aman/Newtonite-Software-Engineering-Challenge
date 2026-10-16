@@ -1,3 +1,4 @@
+import { EventGlyph } from "./events";
 import { AnimatedNumber, Stagger, StaggerItem } from "./motion";
 import { useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
@@ -320,14 +321,14 @@ export function Dashboard() {
           {summary.isPending ? (
             <Loading />
           ) : summary.data?.recent.length ? (
-            <div className="recent-list">
+            <Stagger className="recent-list">
               {summary.data.recent.slice(0, 5).map((e) => (
-                <Link
+                <StaggerItem key={e.id}><Link
                   to={"/items/" + e.item_id}
                   key={e.id}
                   className="recent-event"
                 >
-                  <Avatar name={e.actor_name} />
+                  <EventGlyph type={e.event_type}/>
                   <div>
                     <p>
                       <strong>{e.actor_name}</strong> {eventLabel(e.event_type)}
@@ -335,9 +336,9 @@ export function Dashboard() {
                     <span>{e.title}</span>
                   </div>
                   <time>{relativeTime(e.created_at)}</time>
-                </Link>
+                </Link></StaggerItem>
               ))}
-            </div>
+            </Stagger>
           ) : (
             <Empty title="A fresh start">
               Team activity will appear here as work moves forward.
