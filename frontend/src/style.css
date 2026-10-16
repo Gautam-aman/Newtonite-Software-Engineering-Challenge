@@ -2767,3 +2767,6 @@ tr:hover td {
 /* A single, slow ambient accent; never a perpetual particle field. */
 .login-story::after { animation: login-ambient 1.8s var(--ease) both; }
 @keyframes login-ambient { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+.password-field { position: relative; margin-top: 8px; }
+.password-field input { margin-top: 0; padding-right: 48px; }
+.password-field .icon-button { position: absolute; right: 7px; top: 5px; }

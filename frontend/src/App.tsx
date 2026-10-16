@@ -18,6 +18,8 @@ import {
   Check,
   ChevronDown,
   Command,
+  Eye,
+  EyeOff,
   LayoutDashboard,
   ListTodo,
   LogOut,
@@ -64,6 +66,7 @@ function Login({ onLogin }: { onLogin: (u: User) => void }) {
   const [email, setEmail] = useState("member@newtonops.local");
   const [password, setPassword] = useState("NewtonOps!2026");
   const [busy, setBusy] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<unknown>();
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -133,14 +136,14 @@ function Login({ onLogin }: { onLogin: (u: User) => void }) {
             </label>
             <label>
               Password
-              <input
-                type="password"
+              <div className="password-field"><input
+                type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 maxLength={128}
-              />
+              /><button type="button" className="icon-button" aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword} onClick={()=>setShowPassword(v=>!v)}>{showPassword ? <EyeOff size={17}/> : <Eye size={17}/>}</button></div>
             </label>
             {!!error && <ErrorBox error={error} />}
             <button className="button primary full" disabled={busy}>
