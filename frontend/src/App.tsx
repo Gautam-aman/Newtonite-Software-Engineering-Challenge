@@ -46,9 +46,8 @@ ActionLabel,
 Avatar,
 ErrorBox,
 Loading,
-Modal,
-Toast,
-ToastContext,
+Modal,ScreenBoundary,Toast,
+ToastContext
 } from "./ui";
 const Dashboard = lazy(() =>
   import("./pages/Dashboard").then((module) => ({ default: module.Dashboard })),
@@ -581,7 +580,7 @@ export default function App() {
       <QueryClientProvider client={client}>
         <BrowserRouter>
           <MotionPreferencesProvider>
-            <Root />
+            <ScreenBoundary><Root /></ScreenBoundary>
           </MotionPreferencesProvider>
         </BrowserRouter>
       </QueryClientProvider>

@@ -14,11 +14,11 @@ X,
 } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import {
-createContext,
+Component,createContext,
 useContext,
 useEffect,
 useState,
-type ReactNode,
+type ReactNode
 } from "react";
 import { ApiError,label,type Item,type Priority,type Status } from "./api";
 import { motionTokens } from "./motion";
@@ -336,4 +336,10 @@ export function Toast({
       </button>
     </motion.div>
   );
+}
+
+export class ScreenBoundary extends Component<{children:ReactNode},{failed:boolean}> {
+ state={failed:false};
+ static getDerivedStateFromError(){return {failed:true}}
+ render(){return this.state.failed?<main className="screen-recovery"><span className="empty-icon"><RefreshCw size={23}/></span><h1>The workspace could not finish loading.</h1><p>A screen or resource could not be loaded. Reload the workspace, then sign in again.</p><button className="button primary" onClick={()=>window.location.reload()}>Reload workspace</button></main>:this.props.children}
 }
