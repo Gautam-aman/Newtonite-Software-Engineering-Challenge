@@ -2812,3 +2812,5 @@ tr:hover td {
 .event-glyph {display:grid;place-items:center;width:29px;height:29px;flex-shrink:0;color:var(--accent);background:var(--accent-soft);border:1px solid var(--border);border-radius:9px;position:relative;z-index:1;}
 .event-glyph[data-event=APPROVED] {color:var(--success);background:var(--success-bg);}.event-glyph[data-event=REJECTED] {color:var(--danger);background:var(--danger-bg);}.event-glyph[data-event=CLAIMED] {color:var(--info);background:var(--info-bg);}.event-glyph[data-event=COMMENTED] {color:var(--warning);background:var(--warning-bg);}
 .recent-event {position:relative;padding:17px 8px;border-radius:8px;}.recent-event:hover {background:var(--surface-hover);}.recent-event:before {content:'';position:absolute;left:22px;top:44px;bottom:-15px;border-left:1px solid var(--border);}.recent-list>div:last-child .recent-event:before {display:none;}
+.overview-tools {display:flex;align-items:center;gap:9px;}.overview-tools>.button {font-size:11px;}
+@media(max-width:480px){.overview-tools .button {padding:8px;font-size:0;gap:0;}.overview-tools .button svg {width:15px;}}

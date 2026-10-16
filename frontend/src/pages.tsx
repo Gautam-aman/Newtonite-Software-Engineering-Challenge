@@ -24,6 +24,7 @@ import {
   MessageSquare,
   MoreHorizontal,
   Pencil,
+  RefreshCw,
   Plus,
   Search,
   Send,
@@ -204,6 +205,7 @@ export function Dashboard() {
             Welcome back, {user.name.split(" ")[0]}. Here’s where things stand.
           </p>
         </div>
+        <div className="overview-tools"><button className="button secondary small-button" onClick={()=>void summary.refetch()} disabled={summary.isFetching} aria-label="Refresh overview"><RefreshCw size={14} className={summary.isFetching?"spin":""}/>Refresh</button>
         <div className="date-label">
           <Calendar size={15} />
           {now.toLocaleDateString("en", {
@@ -211,7 +213,7 @@ export function Dashboard() {
             month: "short",
             day: "numeric",
           })}
-        </div>
+        </div></div>
       </div>
       <div className="overview-banner">
         <div>
