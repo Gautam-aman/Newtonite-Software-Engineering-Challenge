@@ -1,7 +1,7 @@
 import {useMotionPreference} from "./motion-preferences";
 import { EventGlyph } from "./events";
 import { AnimatedNumber, Stagger, StaggerItem } from "./motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
   useInfiniteQuery,
@@ -468,6 +468,8 @@ export function Explorer() {
     limit: 15,
   };
   const items = useItems(values,true);
+  const focusPage=useRef(false);
+  useEffect(()=>{if(focusPage.current&&!items.isFetching){focusPage.current=false;document.getElementById("results-heading")?.focus()}},[items.isFetching,page]);
   function filter(name: string, value: string) {
     const next = new URLSearchParams(search);
     value ? next.set(name, value) : next.delete(name);
@@ -690,8 +692,8 @@ export function Explorer() {
             </button>
           </Empty>
         )}
-        <div className="pagination">
-          <span>
+        <h2 className="sr-only" id="results-heading" tabIndex={-1}>Work items, page {page+1}</h2><nav className="pagination" aria-label="Work item pagination">
+          <span aria-live="polite">
             {items.data?.items.length ?? 0} items on page {page + 1}
             <small> · Server-side pagination</small>
           </span>
@@ -699,7 +701,7 @@ export function Explorer() {
             <button
               className="button secondary small-button"
               disabled={page === 0 || items.isFetching}
-              onClick={() => setCursors((c) => c.slice(0, -1))}
+              onClick={() => {focusPage.current=true;setCursors((c) => c.slice(0, -1))}}
             >
               <ChevronLeft size={15} />
               Previous
@@ -715,7 +717,7 @@ export function Explorer() {
               <ChevronRight size={15} />
             </button>
           </div>
-        </div>
+        </nav>
       </section>
     </PageEnter>
   );
