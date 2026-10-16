@@ -98,19 +98,18 @@ export function RouteSurface({ children }: { children: ReactNode }) {
     function focusHeading() {
       const heading = root.current?.querySelector<HTMLElement>("h1");
       if (!heading) return false;
-      if (!document.activeElement?.closest('[role="dialog"]')) {
-        heading.tabIndex = -1;
-        heading.focus({ preventScroll: true });
-        document.title = heading.textContent + " · NewtonOps";
-      }
+      // A drawer/editor may still be exiting when its destination arrives.
+      if (document.querySelector('[role="dialog"]')) return false;
+      heading.tabIndex = -1;
+      heading.focus({ preventScroll: true });
+      document.title = heading.textContent + " · NewtonOps";
       return true;
     }
     if (focusHeading()) return;
     const observer = new MutationObserver(() => {
       if (focusHeading()) observer.disconnect();
     });
-    if (root.current)
-      observer.observe(root.current, { childList: true, subtree: true });
+    observer.observe(document.body, { childList: true, subtree: true });
     return () => observer.disconnect();
   }, []);
   return (

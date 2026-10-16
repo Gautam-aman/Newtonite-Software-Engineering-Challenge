@@ -355,3 +355,24 @@ it("returns focus to the create trigger after the lazy editor closes", async () 
   );
   await waitFor(() => expect(opener).toHaveFocus());
 });
+
+it("focuses the destination heading after navigating through the drawer", async () => {
+  await signIn();
+  await userEvent.click(
+    screen.getByRole("button", { name: "Open navigation" }),
+  );
+  const drawer = await screen.findByRole("dialog", {
+    name: "Workspace navigation",
+  });
+  await userEvent.click(
+    within(drawer).getByRole("link", { name: "Work items" }),
+  );
+  const heading = await screen.findByRole("heading", {
+    name: "Work, with a clear direction.",
+  });
+  await waitFor(() =>
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+  );
+  await waitFor(() => expect(heading).toHaveFocus());
+  expect(document.title).toBe("Work, with a clear direction. · NewtonOps");
+});

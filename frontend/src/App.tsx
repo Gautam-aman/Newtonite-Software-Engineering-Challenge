@@ -262,6 +262,9 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
   }
   const [mobile, setMobile] = useState(false);
   const mobileTrigger = useRef<HTMLButtonElement>(null);
+  const mobileOrigin = useRef(location.pathname);
+  const currentPath = useRef(location.pathname);
+  currentPath.current = location.pathname;
   const [collapsed, setCollapsed] = useState(false);
   const [toast, setToast] = useState("");
   const [toastRevision, setToastRevision] = useState(0);
@@ -428,7 +431,8 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
                     asChild
                     onCloseAutoFocus={(event) => {
                       event.preventDefault();
-                      mobileTrigger.current?.focus();
+                      if (mobileOrigin.current === currentPath.current)
+                        mobileTrigger.current?.focus();
                     }}
                   >
                     <motion.aside
@@ -461,6 +465,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
                   className="icon-button mobile-menu"
                   aria-label="Open navigation"
                   onClick={() => {
+                    mobileOrigin.current = location.pathname;
                     setCollapsed(false);
                     setMobile(true);
                   }}
