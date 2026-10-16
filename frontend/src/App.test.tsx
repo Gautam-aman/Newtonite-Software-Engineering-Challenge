@@ -235,7 +235,7 @@ describe("connected workspace", () => {
     );
     unavailable = false;
     await userEvent.click(
-      screen.getByRole("button", { name: "Refresh latest data" }),
+      screen.getByRole("button", { name: "Try again" }),
     );
     expect((await screen.findAllByText("12")).length).toBeGreaterThan(0);
   });

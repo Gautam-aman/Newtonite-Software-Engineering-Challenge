@@ -2,6 +2,8 @@ import { useMotionPreference } from "./motion-preferences";
 import { createContext, useContext, type ReactNode } from "react";
 import {
   AlertCircle,
+  LockKeyhole,
+  WifiOff,
   ArrowDown,
   ArrowUp,
   Check,
@@ -88,28 +90,32 @@ export function ErrorBox({
   error: unknown;
   retry?: () => void;
 }) {
+  const conflict=error instanceof ApiError && error.status===409;
+  const forbidden=error instanceof ApiError && error.status===403;
+  const network=error instanceof ApiError && error.status===0;
+  const Icon=conflict?RefreshCw:forbidden?LockKeyhole:network?WifiOff:AlertCircle;
   return (
     <motion.div
-      className="error-box"
+      className="error-box" data-tone={conflict?"warning":forbidden?"info":"danger"}
       role="alert"
       initial={{ opacity: 0, y: -5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: motionTokens.control }}
     >
-      <AlertCircle size={19} />
+      <Icon size={19} />
       <div>
         <strong>
           {error instanceof ApiError && error.status === 409
             ? "This item changed"
             : error instanceof ApiError && error.status === 403
               ? "This workspace is restricted"
-              : "Unable to complete this request"}
+              : network ? "Connection interrupted" : "Unable to complete this request"}
         </strong>
         <p>{error instanceof Error ? error.message : "Please try again."}</p>
         {retry && (
           <button className="text-button" onClick={retry}>
             <RefreshCw size={14} />
-            Refresh latest data
+            {conflict?"Refresh latest data":"Try again"}
           </button>
         )}
       </div>
