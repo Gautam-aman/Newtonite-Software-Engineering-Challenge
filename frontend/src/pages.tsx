@@ -610,8 +610,8 @@ export function Explorer() {
         ) : items.isError ? (
           <ErrorBox error={items.error} retry={() => void items.refetch()} />
         ) : items.data.items.length ? (
-          <div className="table-scroll" inert={items.isPlaceholderData}>
-            <table>
+<>          <div className="table-scroll" inert={items.isPlaceholderData}>
+            <table><caption className="sr-only">Work item results</caption>
               <thead>
                 <tr>
                   <th>Work item</th>
@@ -675,7 +675,7 @@ export function Explorer() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </div><div className="mobile-work-list" role="list" aria-label="Work item cards" inert={items.isPlaceholderData}>{items.data.items.map(item=><article key={item.id} role="listitem"><Link className="mobile-work-card" to={"/items/"+item.id} aria-label={"View "+item.title}><div className="mobile-work-top"><span className="item-id">{shortId(item.id)}</span><PriorityMark priority={item.priority}/></div><h3>{item.title}</h3><p>{item.teamName}</p><div className="mobile-work-bottom"><StatusBadge status={item.status}/><span className={overdue(item)?"overdue-date":"due-date"}>{dueLabel(item.dueDate)}</span></div><div className="mobile-work-owner">{item.assigneeName?<><Avatar name={item.assigneeName}/>{item.assigneeName}</>:<><UserRound size={13}/>Unassigned</>}<ChevronRight size={15}/></div></Link></article>)}</div></>
         ) : (
           <Empty title="No work matches these filters">
             Try a different search or clear your filters.
