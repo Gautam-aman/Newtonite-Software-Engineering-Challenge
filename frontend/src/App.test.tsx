@@ -273,3 +273,13 @@ describe("permission and transport contracts", () => {
     window.removeEventListener("session-expired", expired);
   });
 });
+
+it("offers accessible password visibility and exclusive demo-role selection",async()=>{
+ render(<App/>);
+ const password=screen.getByLabelText("Password");expect(password).toHaveAttribute("type","password");
+ await userEvent.click(screen.getByRole("button",{name:"Show password"}));expect(password).toHaveAttribute("type","text");
+ await userEvent.click(screen.getByRole("button",{name:"lead"}));
+ expect(screen.getByLabelText("Email address")).toHaveValue("lead@newtonops.local");
+ expect(screen.getByRole("button",{name:"lead"})).toHaveAttribute("aria-pressed","true");
+ expect(screen.getByRole("button",{name:"member"})).toHaveAttribute("aria-pressed","false");
+});
