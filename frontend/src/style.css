@@ -2807,3 +2807,5 @@ tr:hover td {
 @media(max-width:1200px) { .metric-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
 @media(max-width:800px) { .metric-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.metric-grid>div:last-child {grid-column:span 2;}.metric-grid>div:last-child .metric-card {min-height:120px;}.metric-grid>div:last-child .metric-value {line-height:1.3;} }
 .queue-grid>div { min-width:0; }.queue { height:100%; display:flex; flex-direction:column; }.queue>.empty { flex:1; display:flex; flex-direction:column; justify-content:center; }.queue>.panel-footer { margin-top:auto; }
+.distribution-track { display:flex; gap:4px; height:11px; margin:22px 0 25px; overflow:hidden; border-radius:6px; background:var(--surface-hover); }
+.distribution-track>span { height:100%; border-radius:2px; transform-origin:left; min-width:2px; }

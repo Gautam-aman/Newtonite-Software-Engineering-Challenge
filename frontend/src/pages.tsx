@@ -348,6 +348,11 @@ export function Dashboard() {
           <span className="eyebrow">WORKSPACE PULSE</span>
           <h3>Progress, made visible.</h3>
           <p>A live snapshot of your team’s workflow.</p>
+          {!summary.isPending && summary.data && <div className="distribution-track" role="img" aria-label={summary.data.distribution.map(d=>`${label(d.status)}: ${d.count}`).join(", ")}>{statuses.map(status=>{
+            const count=summary.data.distribution.find(d=>d.status===status)?.count??0;
+            const total=summary.data.distribution.reduce((sum,d)=>sum+d.count,0);
+            return count>0?<motion.span key={status} className={status.toLowerCase()} style={{flexBasis:`${count/Math.max(total,1)*100}%`}} initial={{scaleX:0}} animate={{scaleX:1}} transition={{duration:.45,ease:[.22,1,.36,1]}}/>:null;
+          })}</div>}
           {summary.isPending ? (
             <Loading rows={3} />
           ) : (
