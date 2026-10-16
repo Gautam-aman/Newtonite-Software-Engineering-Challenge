@@ -156,6 +156,8 @@ export function Dashboard() {
     queryKey: ["summary", teamId],
     queryFn: () => api<Summary>("/dashboard/summary?" + params({ teamId })),
   });
+  const [recentLimit,setRecentLimit]=useState(5);
+  useEffect(()=>setRecentLimit(5),[teamId]);
   const metrics = summary.data?.metrics;
   const now = new Date();
   const canCreate = teams.some(
@@ -322,7 +324,7 @@ export function Dashboard() {
             <Loading />
           ) : summary.data?.recent.length ? (
             <Stagger className="recent-list">
-              {summary.data.recent.slice(0, 5).map((e) => (
+              {summary.data.recent.slice(0, recentLimit).map((e) => (
                 <StaggerItem key={e.id}><Link
                   to={"/items/" + e.item_id}
                   key={e.id}
@@ -344,6 +346,7 @@ export function Dashboard() {
               Team activity will appear here as work moves forward.
             </Empty>
           )}
+          {summary.data && summary.data.recent.length>recentLimit && <button className="text-button load-more" onClick={()=>setRecentLimit(summary.data!.recent.length)}>Show all {summary.data.recent.length} recent events<ArrowRight size={13}/></button>}
         </section>
         <section className="panel progress-panel">
           <span className="eyebrow">WORKSPACE PULSE</span>
