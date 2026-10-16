@@ -24,6 +24,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   });
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content",theme==="dark"?"#0c1019":"#f6f7fb");
     try {
       window.localStorage.setItem("newtonops-theme", theme);
     } catch {
