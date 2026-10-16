@@ -139,9 +139,9 @@ export function ItemForm({
         className="item-form"
       >
         <label>
-          Title <span className="required">*</span>
+          <span className="field-label-row"><span>Title <span className="required">*</span></span><span className="field-count">{form.watch("title").length} / 180</span></span>
           <input
-            autoFocus
+            autoFocus aria-label="Title"
             placeholder="What needs to happen?"
             {...form.register("title")}
             maxLength={180}
@@ -152,8 +152,8 @@ export function ItemForm({
           )}
         </label>
         <label>
-          Description
-          <textarea
+          <span className="field-label-row"><span>Description</span><span className="field-count">{form.watch("description").length.toLocaleString()} / 10,000</span></span>
+          <textarea aria-label="Description"
             rows={4}
             placeholder="Add context, impact, and what success looks like…"
             {...form.register("description")}
