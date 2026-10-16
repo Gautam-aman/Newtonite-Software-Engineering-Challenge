@@ -1,3 +1,4 @@
+import {useMotionPreference} from "./motion-preferences";
 import { EventGlyph } from "./events";
 import { AnimatedNumber, Stagger, StaggerItem } from "./motion";
 import { useEffect, useState } from "react";
@@ -423,6 +424,7 @@ const views: Record<string, string> = {
   overdue: "Overdue items",
 };
 export function Explorer() {
+  const reduced = useMotionPreference();
   const { teamId, teams, create } = useSession();
   const [search, setSearch] = useSearchParams();
   const [q, setQ] = useState(search.get("q") ?? "");
@@ -621,8 +623,8 @@ export function Explorer() {
                 </tr>
               </thead>
               <tbody>
-                {items.data.items.map((item) => (
-                  <tr key={item.id}>
+                {items.data.items.map((item,index) => (
+                  <motion.tr key={item.id} initial={reduced?false:{opacity:0,y:6}} animate={{opacity:1,y:0}} transition={{duration:.22,delay:reduced?0:Math.min(index,8)*.025}}>
                     <td>
                       <Link className="table-title" to={"/items/" + item.id}>
                         <span>
@@ -669,7 +671,7 @@ export function Explorer() {
                         <ChevronRight size={17} />
                       </Link>
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))}
               </tbody>
             </table>
