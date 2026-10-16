@@ -38,7 +38,7 @@ import { Avatar, ErrorBox, Loading, Spinner, ToastContext } from "./ui";
 import { Dashboard, Explorer, Detail } from "./pages";
 import { ItemForm } from "./forms";
 import { ThemeProvider, ThemeToggle } from "./theme";
-import { motionTokens } from "./motion";
+import { motionTokens, RouteSurface } from "./motion";
 export const client = new QueryClient({
   defaultOptions: {
     queries: { retry: 1, refetchOnWindowFocus: true, staleTime: 15000 },
@@ -310,7 +310,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
       }}
     >
       <ToastContext.Provider value={setToast}>
-        <div className={`workspace ${collapsed ? "sidebar-collapsed" : ""}`}>
+        <div className={`workspace ${collapsed ? "sidebar-collapsed" : ""}`}><a className="skip-link" href="#main-content">Skip to main content</a>
           <aside className="sidebar desktop-sidebar"><LayoutGroup id="desktop-nav">{sidebarContent}</LayoutGroup></aside>
           <Dialog.Root open={mobile} onOpenChange={setMobile}>
             <AnimatePresence>{mobile && <Dialog.Portal forceMount>
@@ -366,7 +366,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
                 )}
               </div>
             </header>
-            <main className="main-content">
+            <main className="main-content" id="main-content" tabIndex={-1}>
               {teams.isPending ? (
                 <Loading />
               ) : teams.isError ? (
@@ -375,7 +375,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
                   retry={() => void teams.refetch()}
                 />
               ) : (
-                <AnimatePresence mode="wait" initial={false}><motion.div className="route-frame" key={location.pathname} initial={{opacity:0,y:reduced?0:12}} animate={{opacity:1,y:0}} exit={{opacity:0,y:reduced?0:-5}} transition={{duration:reduced?0:motionTokens.control,ease:motionTokens.ease}}><Routes location={location}>
+                <AnimatePresence mode="wait" initial={false}><RouteSurface key={location.pathname}><Routes location={location}>
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/items" element={<Explorer />} />
                   <Route path="/items/:id" element={<Detail />} />
@@ -388,7 +388,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
                       </div>
                     }
                   />
-                </Routes></motion.div></AnimatePresence>
+                </Routes></RouteSurface></AnimatePresence>
               )}
             </main>
             <footer className="workspace-footer">
