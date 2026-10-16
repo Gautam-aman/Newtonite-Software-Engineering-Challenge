@@ -161,33 +161,34 @@ export function Dashboard() {
   );
   const cards = [
     {
-      label: "Active work",
+      label: "Active work", tone: "accent",
       value: metrics?.active,
       detail: "Across your workspace",
       icon: ListFilter,
       view: "",
     },
     {
-      label: "Assigned to me",
+      label: "Assigned to me", tone: "info",
       value: metrics?.mine,
       detail: "Your next moves",
       icon: UserRound,
       view: "mine",
     },
     {
-      label: "Urgent & unassigned",
+      label: "Urgent & unassigned", tone: "warning",
       value: metrics?.urgent,
       detail: "Ready for an owner",
       icon: Zap,
       view: "urgent",
     },
     {
-      label: "Awaiting my approval",
+      label: "Awaiting my approval", tone: "success",
       value: metrics?.approvals,
       detail: "Your review makes progress",
       icon: ShieldCheck,
       view: "approvals",
     },
+    {label:"Overdue work",value:metrics?.overdue,detail:"Past their due date",icon:Clock,view:"overdue",tone:"danger"},
   ];
   return (
     <PageEnter>
@@ -212,9 +213,9 @@ export function Dashboard() {
         <div>
           <span className="banner-tag">
             <span className="mini-dot" />
-            WORK IN FOCUS
+            WORKSPACE SNAPSHOT
           </span>
-          <h2>Make the next move count.</h2>
+          <h2>Turn signals into progress.</h2>
           <p>Bring clarity to the urgent. Keep every handoff accountable.</p>
           <Link to="/items?view=urgent">
             Find work that needs you
@@ -249,7 +250,7 @@ export function Dashboard() {
               transition={{ delay: index * 0.045 }}
             >
               <Link
-                className="metric-card"
+                className="metric-card" data-tone={card.tone}
                 to={"/items" + (card.view ? "?view=" + card.view : "")}
               >
                 <div className="metric-top">

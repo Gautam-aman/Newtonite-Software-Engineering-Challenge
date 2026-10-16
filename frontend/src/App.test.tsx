@@ -42,6 +42,7 @@ function response(body: unknown, status = 200) {
 beforeEach(() => {
   window.history.replaceState({}, "", "/");
   client.clear();
+  client.setDefaultOptions({queries:{...client.getDefaultOptions().queries,retry:false}});
   setToken(null);
   conflict = false;
   unavailable = false;
