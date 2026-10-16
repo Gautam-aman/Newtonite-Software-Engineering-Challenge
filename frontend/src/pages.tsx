@@ -948,7 +948,7 @@ export function Detail() {
                     required
                   />
                   <div>
-                    <span>Visible to your team</span>
+                    <span className="comment-hint">Visible to your team<span className={comment.length>3800?"near-limit":""} aria-label={`${4000-comment.length} characters remaining`}>{comment.length.toLocaleString()} / 4,000</span></span>
                     <button
                       className="button primary small-button"
                       disabled={
