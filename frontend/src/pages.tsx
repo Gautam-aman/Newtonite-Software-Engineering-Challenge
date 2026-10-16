@@ -1,3 +1,4 @@
+import { Stagger, StaggerItem } from "./motion";
 import { useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
@@ -241,14 +242,9 @@ export function Dashboard() {
       {summary.isError ? (
         <ErrorBox error={summary.error} retry={() => void summary.refetch()} />
       ) : (
-        <div className="metric-grid">
-          {cards.map((card, index) => (
-            <motion.div
-              key={card.label}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.045 }}
-            >
+        <Stagger className="metric-grid">
+          {cards.map((card) => (
+            <StaggerItem key={card.label}>
               <Link
                 className="metric-card" data-tone={card.tone}
                 to={"/items" + (card.view ? "?view=" + card.view : "")}
@@ -267,9 +263,9 @@ export function Dashboard() {
                 </div>
                 <span className="metric-detail">{card.detail}</span>
               </Link>
-            </motion.div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       )}
       <div className="section-heading">
         <div>
@@ -281,32 +277,32 @@ export function Dashboard() {
           <ArrowRight size={15} />
         </Link>
       </div>
-      <div className="queue-grid">
-        <Queue
+      <Stagger className="queue-grid">
+        <StaggerItem><Queue
           title="Assigned to me"
           subtitle="Move your work forward"
           view="mine"
           icon={UserRound}
-        />
-        <Queue
+        /></StaggerItem>
+        <StaggerItem><Queue
           title="Urgent & unassigned"
           subtitle="High-impact work that needs an owner"
           view="urgent"
           icon={Zap}
-        />
-        <Queue
+        /></StaggerItem>
+        <StaggerItem><Queue
           title="Awaiting approval"
           subtitle="Review, resolve, and keep things moving"
           view="approvals"
           icon={ShieldCheck}
-        />
-        <Queue
+        /></StaggerItem>
+        <StaggerItem><Queue
           title="Overdue items"
           subtitle="A little attention goes a long way"
           view="overdue"
           icon={Clock}
-        />
-      </div>
+        /></StaggerItem>
+      </Stagger>
       <div className="bottom-grid">
         <section className="panel activity-panel">
           <div className="panel-header">
