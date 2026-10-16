@@ -1,4 +1,4 @@
-import { cleanup,render,screen,waitFor } from "@testing-library/react";
+import { cleanup,render,screen,waitFor,within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach,beforeEach,describe,expect,it,vi } from "vitest";
 import App,{ client } from "./App";
@@ -282,4 +282,11 @@ it("offers accessible password visibility and exclusive demo-role selection",asy
  expect(screen.getByLabelText("Email address")).toHaveValue("lead@newtonops.local");
  expect(screen.getByRole("button",{name:"lead"})).toHaveAttribute("aria-pressed","true");
  expect(screen.getByRole("button",{name:"member"})).toHaveAttribute("aria-pressed","false");
+});
+
+it("traps mobile navigation focus and restores the trigger on Escape",async()=>{
+ await signIn();const trigger=screen.getByRole("button",{name:"Open navigation"});await userEvent.click(trigger);
+ const dialog=await screen.findByRole("dialog",{name:"Workspace navigation"});expect(within(dialog).getByRole("link",{name:"Work items"})).toBeInTheDocument();
+ expect(document.body).toHaveAttribute("data-scroll-locked");
+ await userEvent.keyboard("{Escape}");await waitFor(()=>expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),{timeout:2000});expect(trigger).toHaveFocus();
 });

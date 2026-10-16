@@ -22,7 +22,7 @@ ShieldCheck,
 X,
 } from "lucide-react";
 import { AnimatePresence,LayoutGroup,motion } from "motion/react";
-import { lazy,Suspense,useCallback,useEffect,useState } from "react";
+import { lazy,Suspense,useCallback,useEffect,useRef,useState } from "react";
 import {
 BrowserRouter,
 Link,
@@ -250,6 +250,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
     setCreating(true);
   }
   const [mobile, setMobile] = useState(false);
+  const mobileTrigger = useRef<HTMLButtonElement>(null);
   const [collapsed, setCollapsed] = useState(false);
   const [toast, setToast] = useState("");
   const [toastRevision, setToastRevision] = useState(0);
@@ -411,7 +412,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
                       transition={{ duration: motionTokens.fast }}
                     />
                   </Dialog.Overlay>
-                  <Dialog.Content forceMount asChild>
+                  <Dialog.Content forceMount asChild onCloseAutoFocus={(event) => { event.preventDefault(); mobileTrigger.current?.focus(); }}>
                     <motion.aside
                       className="sidebar mobile-open drawer-sidebar"
                       initial={{ x: reduced ? 0 : -260 }}
@@ -438,6 +439,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
             <header className="topbar">
               <div>
                 <button
+                  ref={mobileTrigger}
                   className="icon-button mobile-menu"
                   aria-label="Open navigation"
                   onClick={() => {
