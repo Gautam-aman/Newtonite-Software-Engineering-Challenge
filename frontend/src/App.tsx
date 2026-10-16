@@ -5,6 +5,7 @@ import {
   Route,
   Routes,
   useNavigate,
+  useLocation,
   Link,
 } from "react-router-dom";
 import {
@@ -197,6 +198,7 @@ function Login({ onLogin }: { onLogin: (u: User) => void }) {
 }
 function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [teamId, setTeamId] = useState("");
   const [creating, setCreating] = useState(false);
   const [mobile, setMobile] = useState(false);
@@ -373,7 +375,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
                   retry={() => void teams.refetch()}
                 />
               ) : (
-                <Routes>
+                <AnimatePresence mode="wait" initial={false}><motion.div className="route-frame" key={location.pathname} initial={{opacity:0,y:reduced?0:12}} animate={{opacity:1,y:0}} exit={{opacity:0,y:reduced?0:-5}} transition={{duration:reduced?0:motionTokens.control,ease:motionTokens.ease}}><Routes location={location}>
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/items" element={<Explorer />} />
                   <Route path="/items/:id" element={<Detail />} />
@@ -386,7 +388,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
                       </div>
                     }
                   />
-                </Routes>
+                </Routes></motion.div></AnimatePresence>
               )}
             </main>
             <footer className="workspace-footer">
