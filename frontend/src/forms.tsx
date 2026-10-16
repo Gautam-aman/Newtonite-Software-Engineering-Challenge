@@ -13,7 +13,7 @@ import {
   type Member,
 } from "./api";
 import { useSession } from "./App";
-import { ErrorBox, Modal, Spinner } from "./ui";
+import { Avatar, ErrorBox, Modal, Spinner } from "./ui";
 const schema = z.object({
   title: z.string().trim().min(1, "Give this item a clear title.").max(180),
   description: z.string().max(10000),
@@ -217,6 +217,7 @@ export function ItemForm({
                   </option>
                 ))}
               </select>
+              {form.watch("assigneeId") && <span className="selected-assignee"><Avatar name={members.data?.find(m=>m.id===form.watch("assigneeId"))?.name??item.assigneeName??"Team member"}/><span>{members.data?.find(m=>m.id===form.watch("assigneeId"))?.name??item.assigneeName}</span><small>{members.data?.find(m=>m.id===form.watch("assigneeId"))?.role.toLowerCase()}</small></span>}
             </label>
           )}
         </fieldset>
