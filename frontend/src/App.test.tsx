@@ -290,3 +290,18 @@ it("traps mobile navigation focus and restores the trigger on Escape",async()=>{
  expect(document.body).toHaveAttribute("data-scroll-locked");
  await userEvent.keyboard("{Escape}");await waitFor(()=>expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),{timeout:2000});expect(trigger).toHaveFocus();
 });
+
+it("focuses a new route while preserving search focus during refetch", async () => {
+  await signIn();
+  await userEvent.click(screen.getByRole("link", { name: "Work items" }));
+  const heading = await screen.findByRole("heading", { name: "Work, with a clear direction." });
+  await waitFor(() => expect(heading).toHaveFocus());
+  await userEvent.keyboard("/");
+  const search = screen.getByRole("textbox", { name: "Search work items" });
+  expect(search).toHaveFocus();
+  await userEvent.type(search, "review");
+  await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => url.includes("q=review"))).toBe(true));
+  expect(search).toHaveFocus();
+  await userEvent.keyboard("{Escape}");
+  expect(search).toHaveValue("");
+});
