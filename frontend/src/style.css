@@ -2792,3 +2792,6 @@ tr:hover td {
 .nav-active-indicator:before { content: ''; position: absolute; left: -1px; top: 12px; bottom: 12px; width: 3px; border-radius: 0 3px 3px 0; background: #ad97ff; }
 .sidebar-collapsed nav a:after { content: attr(data-tooltip); position: absolute; left: calc(100% + 20px); padding: 8px 12px; background: var(--surface-raised); border: 1px solid var(--border); border-radius: 7px; color: var(--text); font-size: 11px; box-shadow: var(--shadow); white-space: nowrap; pointer-events: none; opacity: 0; transform: translateX(-4px); transition: opacity .16s, transform .16s var(--ease); }
 .sidebar-collapsed nav a:hover:after,.sidebar-collapsed nav a:focus-visible:after { opacity: 1; transform: translateX(0); }
+.drawer-sidebar { z-index: 41; visibility: visible; transform: none; width: 260px; }
+.mobile-backdrop { z-index: 40; }
+@media(max-width:800px) { .desktop-sidebar { display: none; } }

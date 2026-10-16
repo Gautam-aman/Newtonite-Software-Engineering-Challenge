@@ -30,7 +30,8 @@ import {
   ShieldCheck,
   X,
 } from "lucide-react";
-import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import { AnimatePresence, LayoutGroup, MotionConfig, motion, useReducedMotion } from "motion/react";
+import * as Dialog from "@radix-ui/react-dialog";
 import { api, setToken, type Team, type User } from "./api";
 import { Avatar, ErrorBox, Loading, Spinner, ToastContext } from "./ui";
 import { Dashboard, Explorer, Detail } from "./pages";
@@ -212,7 +213,8 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
   useEffect(() => {
     if (toast) {
       const t = setTimeout(() => setToast(""), 4000);
-      return () => clearTimeout(t);
+
+  return () => clearTimeout(t);
     }
   }, [toast]);
   useEffect(() => {
@@ -220,19 +222,8 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
     window.addEventListener("session-expired", handler);
     return () => window.removeEventListener("session-expired", handler);
   }, [onLogout]);
-  return (
-    <SessionContext.Provider
-      value={{
-        user,
-        teams: teams.data ?? [],
-        teamId,
-        setTeamId,
-        create: () => setCreating(true),
-      }}
-    >
-      <ToastContext.Provider value={setToast}>
-        <div className={`workspace ${collapsed ? "sidebar-collapsed" : ""}`}>
-          <aside className={`sidebar ${mobile ? "mobile-open" : ""}`}>
+      const reduced = useReducedMotion();
+  const sidebarContent = (<>
             <Brand />
             <button
               className="mobile-close icon-button"
@@ -304,21 +295,37 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
                 </button>
               </div>
             </div>
-          </aside>
-          {mobile && (
-            <button
-              className="mobile-backdrop"
-              aria-label="Close navigation"
-              onClick={() => setMobile(false)}
-            />
-          )}
+
+</>);
+  return (
+    <SessionContext.Provider
+      value={{
+        user,
+        teams: teams.data ?? [],
+        teamId,
+        setTeamId,
+        create: () => setCreating(true),
+      }}
+    >
+      <ToastContext.Provider value={setToast}>
+        <div className={`workspace ${collapsed ? "sidebar-collapsed" : ""}`}>
+          <aside className="sidebar desktop-sidebar"><LayoutGroup id="desktop-nav">{sidebarContent}</LayoutGroup></aside>
+          <Dialog.Root open={mobile} onOpenChange={setMobile}>
+            <AnimatePresence>{mobile && <Dialog.Portal forceMount>
+              <Dialog.Overlay forceMount asChild><motion.div className="mobile-backdrop" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:motionTokens.fast}}/></Dialog.Overlay>
+              <Dialog.Content forceMount asChild><motion.aside className="sidebar mobile-open drawer-sidebar" initial={{x:reduced?0:-260}} animate={{x:0}} exit={{x:reduced?0:-260}} transition={motionTokens.spring}>
+                <Dialog.Title className="sr-only">Workspace navigation</Dialog.Title><Dialog.Description className="sr-only">Choose a workspace page or sign out.</Dialog.Description>
+                <LayoutGroup id="mobile-nav">{sidebarContent}</LayoutGroup>
+              </motion.aside></Dialog.Content>
+            </Dialog.Portal>}</AnimatePresence>
+          </Dialog.Root>
           <div className="workspace-main">
             <header className="topbar">
               <div>
                 <button
                   className="icon-button mobile-menu"
                   aria-label="Open navigation"
-                  onClick={() => setMobile(true)}
+                  onClick={() => {setCollapsed(false);setMobile(true)}}
                 >
                   <Menu size={21} />
                 </button>
