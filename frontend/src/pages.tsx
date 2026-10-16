@@ -34,7 +34,7 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { LayoutGroup, motion } from "motion/react";
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import {
   api,
   ApiError,
@@ -573,8 +573,8 @@ export function Explorer() {
             </button>
           </div>
         </div>
-        {advanced && (
-          <div className="advanced-filters">
+        <AnimatePresence initial={false}>{advanced && (
+          <motion.div className="advanced-filters" initial={{opacity:0,y:-8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-5}} transition={{duration:.18}}>
             {[
               ["createdFrom", "Created from"],
               ["createdTo", "Created to"],
@@ -590,8 +590,8 @@ export function Explorer() {
                 />
               </label>
             ))}
-          </div>
-        )}
+          </motion.div>
+        )}</AnimatePresence>
         <div className="list-meta">
           <span>
             <ListFilter size={14} />
