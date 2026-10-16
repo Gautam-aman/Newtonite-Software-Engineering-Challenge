@@ -12,7 +12,7 @@ A focused internal operations workspace for creating, claiming, progressing and 
 - Create work with durable idempotency; claim atomically; edit with explicit versions.
 - Progress OPEN → IN_PROGRESS → AWAITING_APPROVAL → RESOLVED → CLOSED; Leads may return awaiting work to IN_PROGRESS.
 - Collaborate with versioned comments and inspect paginated, append-only activity.
-- Use responsive layouts, accessible dialog primitives, loading/error states and reduced-motion support.
+- Use dark/light themes, animated navigation and feedback, phone work cards, keyboard shortcuts and reduced-motion preferences.
 
 ## Quick start
 
@@ -60,7 +60,9 @@ Sixty initial items span three teams, all five workflow states and work types, p
 
 ![NewtonOps dashboard, verified in the running container build](docs/screenshots/dashboard.png)
 
-[View the resolved-item screenshot](docs/screenshots/resolved-item.png).
+[Resolved workflow](docs/screenshots/resolved-item.png) · [Light theme](docs/screenshots/dashboard-light.png) · [Phone work cards](docs/screenshots/items-mobile.png).
+
+The [interface redesign record](docs/UI_REDESIGN.md) explains the visual audit, motion, responsive inspection and performance choices. Use the sun/moon control to switch themes, or the motion control to explicitly choose full/reduced animation. The default honors your OS Reduce Motion setting.
 
 ## Architecture
 

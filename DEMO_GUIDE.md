@@ -4,6 +4,8 @@ Start the stack with `docker compose up --build`, then open http://localhost:808
 Use a fresh item so the demonstration can be repeated without resetting the database.
 All demo accounts use **NewtonOps!2026**. Never use these credentials on a shared service.
 
+Before presenting, choose dark or light theme. If the OS requests reduced motion, the workspace honors it; select **Enable animations** explicitly when demonstrating motion. Resize to a phone width to show the navigation drawer and work cards. Press `/` in the explorer to focus search; Escape clears it.
+
 ## 0:00–0:40 — Operational clarity
 Sign in as `member@newtonops.local`. Point to real active-work, assigned, urgent and approval counts. Open **Urgent & unassigned**, then demonstrate status and priority filters. Requests contain filters and a bounded page size; the browser never downloads the whole database. Choose Platform Operations in the team switcher to enable the assignee filter.
 

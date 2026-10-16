@@ -87,8 +87,14 @@ Assumptions: no independent two-person approval requirement; a Lead may approve 
 
 ## 10. Deliberate scope boundaries
 **Context:** Correctness and explainability are more valuable than a broad feature checklist.
-**Options considered:** Outbox/email, websockets, full administration, hard deletion, deployment, dark theme.
+**Options considered:** Outbox/email, websockets, full administration, hard deletion, deployment.
 **Decision:** Deliver the complete synchronous work lifecycle, real dashboard, pagination, tests and local startup. Defer these additions.
 **Reasoning:** There is no external side effect requiring a worker in the implemented product.
 **Trade-offs:** No notifications, attachments, realtime push, undo/reopen, provisioning UI or worker recovery demo.
 **Consequences:** The application never promises delivery of background work. An outbox would be the next feature only when notifications become a product requirement: insert within the mutation transaction; claim with SKIP LOCKED; lease/retry with bounded backoff and idempotent consumer records.
+
+## 11. A focused frontend experience upgrade
+**Context:** The initial functional UI needed stronger hierarchy and clearer interaction feedback.
+**Decision:** Add tokenized dark/light themes and shared motion primitives using the existing stack. Preserve all backend and API semantics; display real server state. Lazy-load pages and the form editor to bound entry cost.
+**Trade-offs:** Route chunks require loading and recovery states. Motion respects the OS by default, with an explicit persisted workspace override. DOM-focused regression tests complement actual browser inspection; they do not measure animation frame rate.
+**Consequences:** Phone cards replace the wide table below 600px. Drawers and editors trap and restore focus; route focus never resets on a search refetch. See docs/UI_REDESIGN.md for validation and evidence.

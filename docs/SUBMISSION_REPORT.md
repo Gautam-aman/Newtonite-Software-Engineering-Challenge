@@ -2,7 +2,7 @@
 
 ## A. What was built
 
-A connected Java/Spring and React operations workspace in the user's existing public GitHub repository. The core P0 slice is implemented: authentication, teams/roles, resource authorization, work creation/read/update/closure, filtering/keyset pagination, workflow/approval, atomic claims, expected versions, create idempotency, transactional history, comments, real dashboard metrics, tests and one-command Compose startup. The UI includes responsive navigation, validated dialogs, loading/empty/error states, subtle motion, reduced-motion support and explicit conflict refresh.
+A connected Java/Spring and React operations workspace in the user's existing public GitHub repository. The core P0 slice is implemented: authentication, teams/roles, resource authorization, work creation/read/update/closure, filtering/keyset pagination, workflow/approval, atomic claims, expected versions, create idempotency, transactional history, comments, real dashboard metrics, tests and one-command Compose startup. The UI now includes a complete premium redesign: dark/light themes, animated responsive navigation, phone work cards, validated dialogs, loading/empty/error states, motion preferences and explicit conflict refresh.
 
 ## B. Architecture
 
@@ -10,11 +10,11 @@ React 19/strict TypeScript/Vite uses TanStack Query for server state, Router for
 
 ## C. Completion and scope
 
-The complete synchronous product is implemented. CRUD deletion is deliberately modeled as workflow closure; no delete/reopen endpoint exists. Admin has team-local Lead capabilities. Approvers may approve their own assigned work; independent two-person approval was not assumed. No worker or outbox is implemented because the product sends no external notifications. Signup, provisioning/admin screens, attachments, SSO, notifications, dark/light switching, hosting and video remain excluded. These choices are documented rather than represented as complete features.
+The complete synchronous product is implemented. CRUD deletion is deliberately modeled as workflow closure; no delete/reopen endpoint exists. Admin has team-local Lead capabilities. Approvers may approve their own assigned work; independent two-person approval was not assumed. No worker or outbox is implemented because the product sends no external notifications. Signup, provisioning/admin screens, attachments, SSO, notifications, hosting and video remain excluded. These choices are documented rather than represented as complete features.
 
 ## D. Evidence
 
-Fresh remote checkout tested: **32792ed93da99c24cedaaf7030c476516010578d**.
+Original full-stack fresh remote checkout tested: **32792ed93da99c24cedaaf7030c476516010578d**. The subsequent frontend redesign passed 15 frontend tests and strict build; the unchanged backend passed all 22 integration tests again. See [UI_REDESIGN.md](UI_REDESIGN.md) and the current [verification record](VERIFICATION.md) for four-width inspection, live workflow, screenshots and CI.
 
 | Executed command/check | Observed result |
 | --- | --- |
@@ -28,14 +28,14 @@ Fresh remote checkout tested: **32792ed93da99c24cedaaf7030c476516010578d**.
 | GitHub Actions at dc93ba9 | Backend, frontend and Compose smoke all passed |
 | Frontend runtime dependency audit | Zero reported at check time; not a comprehensive security claim |
 
-Initial PostgreSQL 15 tests also passed. UI unit tests mock HTTP; the live smoke and PostgreSQL tests supply integration coverage. No standalone Playwright suite, exhaustive device/accessibility test, load benchmark or failover drill is claimed. Vite reports a successful-build bundle-size advisory (~194 kB gzip JavaScript). Full evidence and host setup notes are in [VERIFICATION.md](VERIFICATION.md).
+Initial PostgreSQL 15 tests also passed. UI unit tests mock HTTP; the live smoke and PostgreSQL tests supply integration coverage. No standalone Playwright suite, exhaustive device/accessibility test, load benchmark or failover drill is claimed. The redesign splits routes and the editor; the entry is ~158 kB gzip without the prior chunk-size advisory. Full evidence and host setup notes are in [VERIFICATION.md](VERIFICATION.md).
 
 ## E. GitHub status
 
 - Existing origin: https://github.com/Gautam-aman/Newtonite-Software-Engineering-Challenge.git
 - Existing default branch: **main**; public repository; original commit retained.
 - All implementation milestones were pushed normally; no force push/history rewrite.
-- Runtime code revision: **dc93ba945d9453f3c536bb39de218191dcd235d5**.
+- Original runtime code revision: **dc93ba945d9453f3c536bb39de218191dcd235d5**.
 - Fresh-clone verified revision including guides: **32792ed93da99c24cedaaf7030c476516010578d**.
 - The final response supplies the final evidence commit hash and remote-head comparison. A commit cannot contain its own hash.
 
@@ -70,7 +70,7 @@ The strongest defensible decisions are database compare-and-set claims, explicit
 
 ## I. Limits
 
-No public security/availability/throughput guarantee. No rate limiting, session/idempotency cleanup scheduler, password recovery, MFA, HTTPS termination or production account management. Memory-only tokens require login on reload. Database owners can disable the audit trigger. Keyset pages are not a collection-wide snapshot and have no random-access page numbers. Small screens scroll the dense work table horizontally. P2 outbox and deployment are deliberately absent. The university PDF is advisory; no employer original brief or submission-form URL was provided.
+No public security/availability/throughput guarantee. No rate limiting, session/idempotency cleanup scheduler, password recovery, MFA, HTTPS termination or production account management. Memory-only tokens require login on reload. Database owners can disable the audit trigger. Keyset pages are not a collection-wide snapshot and have no random-access page numbers. Phone screens use work cards; tablet tables remain scrollable inside their panel when needed. P2 outbox and deployment are deliberately absent. The university PDF is advisory; no employer original brief or submission-form URL was provided.
 
 ## J. Readiness
 
