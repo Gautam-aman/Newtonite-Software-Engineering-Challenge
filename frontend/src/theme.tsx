@@ -15,7 +15,7 @@ const ThemeContext = createContext<{ theme: Theme; toggle: () => void }>({
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     try {
-      return localStorage.getItem("newtonops-theme") === "light"
+      return window.localStorage.getItem("newtonops-theme") === "light"
         ? "light"
         : "dark";
     } catch {
@@ -25,7 +25,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     try {
-      localStorage.setItem("newtonops-theme", theme);
+      window.localStorage.setItem("newtonops-theme", theme);
     } catch {
       /* Storage can be disabled without breaking the workspace. */
     }

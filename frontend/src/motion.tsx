@@ -1,5 +1,6 @@
+import { useMotionPreference } from "./motion-preferences";
 import { useEffect, useRef, type ReactNode } from "react";
-import { animate, motion, useReducedMotion, type Variants } from "motion/react";
+import { animate, motion, type Variants } from "motion/react";
 
 // Shared timing vocabulary. Major entrances are deliberately longer than controls.
 export const motionTokens = {
@@ -16,7 +17,7 @@ export function Stagger({
   children: ReactNode;
   className?: string;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useMotionPreference();
   const variants: Variants = {
     hidden: {},
     visible: { transition: { staggerChildren: reduced ? 0 : 0.055 } },
@@ -39,7 +40,7 @@ export function StaggerItem({
   children: ReactNode;
   className?: string;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useMotionPreference();
   return (
     <motion.div
       className={className}
@@ -57,7 +58,7 @@ export function StaggerItem({
   );
 }
 export function AnimatedNumber({ value }: { value: number }) {
-  const reduced = useReducedMotion();
+  const reduced = useMotionPreference();
   const node = useRef<HTMLSpanElement>(null);
   const previous = useRef(value);
   useEffect(() => {
@@ -89,7 +90,7 @@ export function AnimatedNumber({ value }: { value: number }) {
 
 // Wait for asynchronous page content without moving focus on filter/query changes.
 export function RouteSurface({children}: {children:ReactNode}) {
-  const reduced = useReducedMotion();
+  const reduced = useMotionPreference();
   const root = useRef<HTMLDivElement>(null);
   useEffect(()=>{
     window.scrollTo({top:0,behavior:"instant"});

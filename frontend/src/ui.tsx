@@ -1,3 +1,4 @@
+import { useMotionPreference } from "./motion-preferences";
 import { createContext, useContext, type ReactNode } from "react";
 import {
   AlertCircle,
@@ -11,7 +12,7 @@ import {
   LoaderCircle,
 } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { motionTokens } from "./motion";
 import { ApiError, label, type Item, type Priority, type Status } from "./api";
 export const ToastContext = createContext<(message: string) => void>(() => {});
@@ -150,7 +151,7 @@ export function Modal({
   description: string;
   children: ReactNode;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useMotionPreference();
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <AnimatePresence>

@@ -1,3 +1,4 @@
+import { MotionPreferencesProvider, MotionToggle, useMotionPreference } from "./motion-preferences";
 import { useEffect, useState, createContext, useContext } from "react";
 import {
   BrowserRouter,
@@ -31,7 +32,7 @@ import {
   ShieldCheck,
   X,
 } from "lucide-react";
-import { AnimatePresence, LayoutGroup, MotionConfig, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { api, setToken, type Team, type User } from "./api";
 import { Avatar, ErrorBox, Loading, Spinner, ToastContext } from "./ui";
@@ -187,7 +188,7 @@ function Login({ onLogin }: { onLogin: (u: User) => void }) {
           </div>
         </motion.div>
         <div className="login-theme">
-          <ThemeToggle />
+          <ThemeToggle /><MotionToggle/>
         </div>
         <div className="login-bottom">
           <span className="mini-dot" />A calmer way to manage the critical.
@@ -224,7 +225,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
     window.addEventListener("session-expired", handler);
     return () => window.removeEventListener("session-expired", handler);
   }, [onLogout]);
-      const reduced = useReducedMotion();
+      const reduced = useMotionPreference();
   const sidebarContent = (<>
             <Brand />
             <button
@@ -336,7 +337,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
                 </span>
               </div>
               <div className="header-actions">
-                <ThemeToggle />
+                <ThemeToggle /><MotionToggle/>
                 <div className="team-select">
                   <label className="sr-only" htmlFor="team-switcher">
                     Active team
@@ -455,9 +456,9 @@ export default function App() {
     <ThemeProvider>
       <QueryClientProvider client={client}>
         <BrowserRouter>
-          <MotionConfig reducedMotion="user" transition={{ duration: 0.2 }}>
+          <MotionPreferencesProvider>
             <Root />
-          </MotionConfig>
+          </MotionPreferencesProvider>
         </BrowserRouter>
       </QueryClientProvider>
     </ThemeProvider>
