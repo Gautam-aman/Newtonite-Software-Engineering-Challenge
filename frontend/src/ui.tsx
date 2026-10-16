@@ -1,5 +1,5 @@
 import { useMotionPreference } from "./motion-preferences";
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import {
   AlertCircle,
   LockKeyhole,
@@ -234,4 +234,11 @@ export function shortId(id: string) {
 
 export function ActionLabel({pending,children,loadingText="Saving…"}:{pending:boolean;children:ReactNode;loadingText?:string}) {
  return <span className="action-label"><motion.span className="action-label-idle" aria-hidden={pending} animate={{opacity:pending?0:1}} transition={{duration:motionTokens.fast}}>{children}</motion.span><AnimatePresence initial={false}>{pending&&<motion.span className="action-label-pending" initial={{opacity:0,y:3}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:motionTokens.fast}}><span aria-hidden="true"><Spinner/></span>{loadingText}</motion.span>}</AnimatePresence></span>;
+}
+
+export function Toast({message,onDismiss}:{message:string;onDismiss:()=>void}) {
+ const [paused,setPaused]=useState(false);
+ useEffect(()=>{if(paused)return;const timer=setTimeout(onDismiss,5000);return()=>clearTimeout(timer)},[paused,onDismiss]);
+ useEffect(()=>{const visibility=()=>setPaused(document.hidden);document.addEventListener("visibilitychange",visibility);return()=>document.removeEventListener("visibilitychange",visibility)},[]);
+ return <motion.div role="status" className="toast" onPointerEnter={()=>setPaused(true)} onPointerLeave={()=>setPaused(false)} onFocus={()=>setPaused(true)} onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget))setPaused(false)}} initial={{opacity:0,y:20,scale:.98}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:8}} transition={motionTokens.spring}><span aria-hidden="true"><Check size={16}/></span><div><strong>Update confirmed</strong><p>{message}</p></div><button className="icon-button" onClick={onDismiss} aria-label="Dismiss notification"><X size={15}/></button></motion.div>;
 }

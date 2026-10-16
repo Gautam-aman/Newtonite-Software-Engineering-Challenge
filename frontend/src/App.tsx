@@ -1,5 +1,5 @@
 import { MotionPreferencesProvider, MotionToggle, useMotionPreference } from "./motion-preferences";
-import { useEffect, useState, createContext, useContext } from "react";
+import { useEffect, useState, useCallback, createContext, useContext } from "react";
 import {
   BrowserRouter,
   NavLink,
@@ -17,7 +17,6 @@ import {
 import {
   Activity,
   ArrowUpRight,
-  Check,
   ChevronDown,
   Command,
   Eye,
@@ -35,7 +34,7 @@ import {
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { api, setToken, type Team, type User } from "./api";
-import { Avatar, ErrorBox, Loading, ActionLabel, ToastContext } from "./ui";
+import { Avatar, ErrorBox, Loading, ActionLabel, Toast, ToastContext } from "./ui";
 import { Dashboard, Explorer, Detail } from "./pages";
 import { ItemForm } from "./forms";
 import { ThemeProvider, ThemeToggle } from "./theme";
@@ -198,6 +197,9 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
   const [mobile, setMobile] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [toast, setToast] = useState("");
+  const [toastRevision,setToastRevision]=useState(0);
+  const notify=useCallback((message:string)=>{setToast(message);setToastRevision(v=>v+1)},[]);
+  const dismissToast=useCallback(()=>setToast(""),[]);
   const teams = useQuery({
     queryKey: ["teams"],
     queryFn: () => api<Team[]>("/teams"),
@@ -206,13 +208,6 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
   const canCreate = teamId
     ? selected?.role !== "VIEWER"
     : teams.data?.some((t) => t.role !== "VIEWER");
-  useEffect(() => {
-    if (toast) {
-      const t = setTimeout(() => setToast(""), 4000);
-
-  return () => clearTimeout(t);
-    }
-  }, [toast]);
   useEffect(() => {
     const handler = () => onLogout();
     window.addEventListener("session-expired", handler);
@@ -303,7 +298,7 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
         create: () => setCreating(true),
       }}
     >
-      <ToastContext.Provider value={setToast}>
+      <ToastContext.Provider value={notify}>
         <div className={`workspace ${collapsed ? "sidebar-collapsed" : ""}`}><a className="skip-link" href="#main-content">Skip to main content</a>
           <aside className="sidebar desktop-sidebar"><LayoutGroup id="desktop-nav">{sidebarContent}</LayoutGroup></aside>
           <Dialog.Root open={mobile} onOpenChange={setMobile}>
@@ -401,31 +396,11 @@ function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
           onSaved={(item) => {
             setCreating(false);
             navigate("/items/" + item.id);
-            setToast("Work item created");
+            notify("Work item created");
           }}
         />
         <AnimatePresence>
-          {toast && (
-            <motion.div
-              role="status"
-              className="toast"
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-            >
-              <span>
-                <Check size={16} />
-              </span>
-              {toast}
-              <button
-                className="icon-button"
-                onClick={() => setToast("")}
-                aria-label="Dismiss notification"
-              >
-                <X size={15} />
-              </button>
-            </motion.div>
-          )}
+          {toast&&<Toast key={toastRevision} message={toast} onDismiss={dismissToast}/>}
         </AnimatePresence>
       </ToastContext.Provider>
     </SessionContext.Provider>
