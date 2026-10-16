@@ -1,4 +1,4 @@
-import { Stagger, StaggerItem } from "./motion";
+import { AnimatedNumber, Stagger, StaggerItem } from "./motion";
 import { useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
@@ -257,7 +257,7 @@ export function Dashboard() {
                   {summary.isPending ? (
                     <span className="skeleton metric-skeleton" />
                   ) : (
-                    card.value
+                    card.value === undefined ? "—" : <AnimatedNumber value={card.value}/>
                   )}
                   <ArrowUpRight size={18} />
                 </div>
