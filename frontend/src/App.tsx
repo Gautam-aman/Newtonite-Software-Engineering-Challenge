@@ -1,29 +1,439 @@
-import {useEffect,useState,createContext,useContext} from 'react';
-import {BrowserRouter,NavLink,Route,Routes,useNavigate,Link} from 'react-router-dom';
-import {QueryClient,QueryClientProvider,useQuery} from '@tanstack/react-query';
-import {Activity,ArrowUpRight,Check,ChevronDown,Command,LayoutDashboard,ListTodo,LogOut,Menu,Plus,ShieldCheck,X} from 'lucide-react';
-import {AnimatePresence,MotionConfig,motion} from 'motion/react';
-import {api,setToken,type Team,type User} from './api';
-import {Avatar,ErrorBox,Loading,Spinner,ToastContext} from './ui';
-import {Dashboard,Explorer,Detail} from './pages';
-import {ItemForm} from './forms';
-export const client=new QueryClient({defaultOptions:{queries:{retry:1,refetchOnWindowFocus:true,staleTime:15000}}});
-interface Session {user:User;teams:Team[];teamId:string;setTeamId:(id:string)=>void;create:()=>void}
-const SessionContext=createContext<Session>(null!);
-export const useSession=()=>useContext(SessionContext);
-function Brand(){return <div className="brand"><span className="brand-icon"><Command size={21}/></span><span>Newton<span className="brand-light">Ops</span><small>OPERATIONS WORKSPACE</small></span></div>}
-function Login({onLogin}:{onLogin:(u:User)=>void}){
- const [email,setEmail]=useState('member@newtonops.local');const [password,setPassword]=useState('NewtonOps!2026');const [busy,setBusy]=useState(false);const [error,setError]=useState<unknown>();
- async function submit(e:React.FormEvent){e.preventDefault();setBusy(true);setError(undefined);try{const result=await api<{token:string;user:User}>('/auth/login',{method:'POST',body:JSON.stringify({email,password})});setToken(result.token);onLogin(result.user)}catch(e){setError(e)}finally{setBusy(false)}}
- return <div className="login"><section className="login-story"><Brand/><div className="login-copy"><span className="eyebrow light">CLARITY UNDER PRESSURE</span><h1>Keep work moving.<br/><em>Stay in control.</em></h1><p>One shared workspace for the issues that matter.<br/>From the first signal to the final resolution.</p><div className="signal-card"><span className="signal-orbit"><Activity size={32}/></span><div><span className="eyebrow light">THE NEWTONOPS WAY</span><h3>Every action. Accounted for.</h3><p>Clear ownership · Controlled workflows · Complete history</p></div></div></div><div className="login-footer"><span>Built for the teams behind the scenes.</span><span>01 / OPERATIONS</span></div></section><section className="login-form-side"><div className="login-form"><span className="eyebrow">YOUR OPERATIONS, TOGETHER</span><h2>Welcome to your workspace</h2><p className="muted">Sign in to see what needs your attention.</p><form onSubmit={submit}><label>Email address<input type="email" autoComplete="username" required value={email} onChange={e=>setEmail(e.target.value)} maxLength={254}/></label><label>Password<input type="password" autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)} maxLength={128}/></label>{!!error&&<ErrorBox error={error}/>}<button className="button primary full" disabled={busy}>{busy?<Spinner/>:<>Sign in to NewtonOps<ArrowUpRight size={16}/></>}</button></form><div className="demo-box"><div><ShieldCheck size={17}/><strong>Explore the local demo</strong></div><p>Choose a role. Demo credentials are filled in for you.</p><div className="demo-roles">{['member','lead','viewer','admin'].map(role=><button key={role} type="button" className={email.startsWith(role+'@')?'selected':''} onClick={()=>{setEmail(role+'@newtonops.local');setPassword('NewtonOps!2026')}}>{role}</button>)}</div><small>Development accounts only. Sessions last 8 hours.</small></div></div><div className="login-bottom"><span className="mini-dot"/>A calmer way to manage the critical.</div></section></div>
+import { useEffect, useState, createContext, useContext } from "react";
+import {
+  BrowserRouter,
+  NavLink,
+  Route,
+  Routes,
+  useNavigate,
+  Link,
+} from "react-router-dom";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
+import {
+  Activity,
+  ArrowUpRight,
+  Check,
+  ChevronDown,
+  Command,
+  LayoutDashboard,
+  ListTodo,
+  LogOut,
+  Menu,
+  Plus,
+  ShieldCheck,
+  X,
+} from "lucide-react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import { api, setToken, type Team, type User } from "./api";
+import { Avatar, ErrorBox, Loading, Spinner, ToastContext } from "./ui";
+import { Dashboard, Explorer, Detail } from "./pages";
+import { ItemForm } from "./forms";
+export const client = new QueryClient({
+  defaultOptions: {
+    queries: { retry: 1, refetchOnWindowFocus: true, staleTime: 15000 },
+  },
+});
+interface Session {
+  user: User;
+  teams: Team[];
+  teamId: string;
+  setTeamId: (id: string) => void;
+  create: () => void;
 }
-function Workspace({user,onLogout}:{user:User;onLogout:()=>void}){
- const navigate=useNavigate();const [teamId,setTeamId]=useState('');const [creating,setCreating]=useState(false);const [mobile,setMobile]=useState(false);const [toast,setToast]=useState('');
- const teams=useQuery({queryKey:['teams'],queryFn:()=>api<Team[]>('/teams')});
- const selected=teams.data?.find(t=>t.id===teamId);const canCreate=teamId?selected?.role!=='VIEWER':teams.data?.some(t=>t.role!=='VIEWER');
- useEffect(()=>{if(toast){const t=setTimeout(()=>setToast(''),4000);return()=>clearTimeout(t)}},[toast]);
- useEffect(()=>{const handler=()=>onLogout();window.addEventListener('session-expired',handler);return()=>window.removeEventListener('session-expired',handler)},[onLogout]);
- return <SessionContext.Provider value={{user,teams:teams.data??[],teamId,setTeamId,create:()=>setCreating(true)}}><ToastContext.Provider value={setToast}><div className="workspace"><aside className={`sidebar ${mobile?'mobile-open':''}`}><Brand/><button className="mobile-close icon-button" onClick={()=>setMobile(false)} aria-label="Close navigation"><X size={20}/></button><div className="workspace-tag"><span className="workspace-monogram">N</span><div><strong>Newtonite</strong><small>Internal operations</small></div><span className="workspace-plan">DEMO</span></div><span className="nav-label">WORKSPACE</span><nav onClick={()=>setMobile(false)}><NavLink to="/" end><LayoutDashboard size={18}/>Overview</NavLink><NavLink to="/items"><ListTodo size={18}/>Work items<span className="nav-shortcut">↗</span></NavLink></nav><div className="sidebar-note"><span className="note-icon"><ShieldCheck size={18}/></span><h4>Confidence in every handoff.</h4><p>Team permissions and a complete activity trail keep work accountable.</p><Link to="/items?view=approvals">Review approvals<ArrowUpRight size={14}/></Link></div><div className="sidebar-bottom"><div className="system-status"><span className="mini-dot"/>Operations workspace</div><div className="user-profile"><Avatar name={user.name}/><div><strong>{user.name}</strong><small>{selected?selected.role.toLowerCase():'Team workspace'}</small></div><button className="icon-button" aria-label="Sign out" onClick={async()=>{try{await api('/auth/logout',{method:'POST'})}finally{onLogout()}}}><LogOut size={16}/></button></div></div></aside>{mobile&&<button className="mobile-backdrop" aria-label="Close navigation" onClick={()=>setMobile(false)}/>}<div className="workspace-main"><header className="topbar"><div><button className="icon-button mobile-menu" aria-label="Open navigation" onClick={()=>setMobile(true)}><Menu size={21}/></button><span className="breadcrumb">Workspace <span>/</span> <strong>Operations</strong></span></div><div className="header-actions"><div className="team-select"><label className="sr-only" htmlFor="team-switcher">Active team</label><select id="team-switcher" value={teamId} onChange={e=>setTeamId(e.target.value)}><option value="">All my teams</option>{teams.data?.map(t=><option value={t.id} key={t.id}>{t.name}</option>)}</select><ChevronDown size={14}/></div>{canCreate&&<button className="button primary small-button" onClick={()=>setCreating(true)}><Plus size={16}/>New item</button>}</div></header><main className="main-content">{teams.isPending?<Loading/>:teams.isError?<ErrorBox error={teams.error} retry={()=>void teams.refetch()}/>:<Routes><Route path="/" element={<Dashboard/>}/><Route path="/items" element={<Explorer/>}/><Route path="/items/:id" element={<Detail/>}/><Route path="*" element={<div className="empty"><h1>Page not found</h1><Link to="/">Return to overview</Link></div>}/></Routes>}</main><footer className="workspace-footer"><span>NewtonOps <span>·</span> Clarity in every operation</span><span>Built for accountability <ShieldCheck size={12}/></span></footer></div></div><ItemForm open={creating} onOpenChange={setCreating} onSaved={item=>{setCreating(false);navigate('/items/'+item.id);setToast('Work item created')}}/><AnimatePresence>{toast&&<motion.div role="status" className="toast" initial={{opacity:0,y:18}} animate={{opacity:1,y:0}} exit={{opacity:0,y:10}}><span><Check size={16}/></span>{toast}<button className="icon-button" onClick={()=>setToast('')} aria-label="Dismiss notification"><X size={15}/></button></motion.div>}</AnimatePresence></ToastContext.Provider></SessionContext.Provider>
+const SessionContext = createContext<Session>(null!);
+export const useSession = () => useContext(SessionContext);
+function Brand() {
+  return (
+    <div className="brand">
+      <span className="brand-icon">
+        <Command size={21} />
+      </span>
+      <span>
+        Newton<span className="brand-light">Ops</span>
+        <small>OPERATIONS WORKSPACE</small>
+      </span>
+    </div>
+  );
 }
-function Root(){const [user,setUser]=useState<User|null>(null);function logout(){setToken(null);client.clear();setUser(null)}return user?<Workspace user={user} onLogout={logout}/>:<Login onLogin={setUser}/>}
-export default function App(){return <QueryClientProvider client={client}><BrowserRouter><MotionConfig reducedMotion="user" transition={{duration:.2}}><Root/></MotionConfig></BrowserRouter></QueryClientProvider>}
+function Login({ onLogin }: { onLogin: (u: User) => void }) {
+  const [email, setEmail] = useState("member@newtonops.local");
+  const [password, setPassword] = useState("NewtonOps!2026");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<unknown>();
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError(undefined);
+    try {
+      const result = await api<{ token: string; user: User }>("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+      setToken(result.token);
+      onLogin(result.user);
+    } catch (e) {
+      setError(e);
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <div className="login">
+      <section className="login-story">
+        <Brand />
+        <div className="login-copy">
+          <span className="eyebrow light">CLARITY UNDER PRESSURE</span>
+          <h1>
+            Keep work moving.
+            <br />
+            <em>Stay in control.</em>
+          </h1>
+          <p>
+            One shared workspace for the issues that matter.
+            <br />
+            From the first signal to the final resolution.
+          </p>
+          <div className="signal-card">
+            <span className="signal-orbit">
+              <Activity size={32} />
+            </span>
+            <div>
+              <span className="eyebrow light">THE NEWTONOPS WAY</span>
+              <h3>Every action. Accounted for.</h3>
+              <p>Clear ownership · Controlled workflows · Complete history</p>
+            </div>
+          </div>
+        </div>
+        <div className="login-footer">
+          <span>Built for the teams behind the scenes.</span>
+          <span>01 / OPERATIONS</span>
+        </div>
+      </section>
+      <section className="login-form-side">
+        <div className="login-form">
+          <span className="eyebrow">YOUR OPERATIONS, TOGETHER</span>
+          <h2>Welcome to your workspace</h2>
+          <p className="muted">Sign in to see what needs your attention.</p>
+          <form onSubmit={submit}>
+            <label>
+              Email address
+              <input
+                type="email"
+                autoComplete="username"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                maxLength={254}
+              />
+            </label>
+            <label>
+              Password
+              <input
+                type="password"
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                maxLength={128}
+              />
+            </label>
+            {!!error && <ErrorBox error={error} />}
+            <button className="button primary full" disabled={busy}>
+              {busy ? (
+                <Spinner />
+              ) : (
+                <>
+                  Sign in to NewtonOps
+                  <ArrowUpRight size={16} />
+                </>
+              )}
+            </button>
+          </form>
+          <div className="demo-box">
+            <div>
+              <ShieldCheck size={17} />
+              <strong>Explore the local demo</strong>
+            </div>
+            <p>Choose a role. Demo credentials are filled in for you.</p>
+            <div className="demo-roles">
+              {["member", "lead", "viewer", "admin"].map((role) => (
+                <button
+                  key={role}
+                  type="button"
+                  className={email.startsWith(role + "@") ? "selected" : ""}
+                  onClick={() => {
+                    setEmail(role + "@newtonops.local");
+                    setPassword("NewtonOps!2026");
+                  }}
+                >
+                  {role}
+                </button>
+              ))}
+            </div>
+            <small>Development accounts only. Sessions last 8 hours.</small>
+          </div>
+        </div>
+        <div className="login-bottom">
+          <span className="mini-dot" />A calmer way to manage the critical.
+        </div>
+      </section>
+    </div>
+  );
+}
+function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
+  const navigate = useNavigate();
+  const [teamId, setTeamId] = useState("");
+  const [creating, setCreating] = useState(false);
+  const [mobile, setMobile] = useState(false);
+  const [toast, setToast] = useState("");
+  const teams = useQuery({
+    queryKey: ["teams"],
+    queryFn: () => api<Team[]>("/teams"),
+  });
+  const selected = teams.data?.find((t) => t.id === teamId);
+  const canCreate = teamId
+    ? selected?.role !== "VIEWER"
+    : teams.data?.some((t) => t.role !== "VIEWER");
+  useEffect(() => {
+    if (toast) {
+      const t = setTimeout(() => setToast(""), 4000);
+      return () => clearTimeout(t);
+    }
+  }, [toast]);
+  useEffect(() => {
+    const handler = () => onLogout();
+    window.addEventListener("session-expired", handler);
+    return () => window.removeEventListener("session-expired", handler);
+  }, [onLogout]);
+  return (
+    <SessionContext.Provider
+      value={{
+        user,
+        teams: teams.data ?? [],
+        teamId,
+        setTeamId,
+        create: () => setCreating(true),
+      }}
+    >
+      <ToastContext.Provider value={setToast}>
+        <div className="workspace">
+          <aside className={`sidebar ${mobile ? "mobile-open" : ""}`}>
+            <Brand />
+            <button
+              className="mobile-close icon-button"
+              onClick={() => setMobile(false)}
+              aria-label="Close navigation"
+            >
+              <X size={20} />
+            </button>
+            <div className="workspace-tag">
+              <span className="workspace-monogram">N</span>
+              <div>
+                <strong>Newtonite</strong>
+                <small>Internal operations</small>
+              </div>
+              <span className="workspace-plan">DEMO</span>
+            </div>
+            <span className="nav-label">WORKSPACE</span>
+            <nav onClick={() => setMobile(false)}>
+              <NavLink to="/" end>
+                <LayoutDashboard size={18} />
+                Overview
+              </NavLink>
+              <NavLink to="/items">
+                <ListTodo size={18} />
+                Work items<span className="nav-shortcut">↗</span>
+              </NavLink>
+            </nav>
+            <div className="sidebar-note">
+              <span className="note-icon">
+                <ShieldCheck size={18} />
+              </span>
+              <h4>Confidence in every handoff.</h4>
+              <p>
+                Team permissions and a complete activity trail keep work
+                accountable.
+              </p>
+              <Link to="/items?view=approvals">
+                Review approvals
+                <ArrowUpRight size={14} />
+              </Link>
+            </div>
+            <div className="sidebar-bottom">
+              <div className="system-status">
+                <span className="mini-dot" />
+                Operations workspace
+              </div>
+              <div className="user-profile">
+                <Avatar name={user.name} />
+                <div>
+                  <strong>{user.name}</strong>
+                  <small>
+                    {selected ? selected.role.toLowerCase() : "Team workspace"}
+                  </small>
+                </div>
+                <button
+                  className="icon-button"
+                  aria-label="Sign out"
+                  onClick={async () => {
+                    try {
+                      await api("/auth/logout", { method: "POST" });
+                    } finally {
+                      onLogout();
+                    }
+                  }}
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
+            </div>
+          </aside>
+          {mobile && (
+            <button
+              className="mobile-backdrop"
+              aria-label="Close navigation"
+              onClick={() => setMobile(false)}
+            />
+          )}
+          <div className="workspace-main">
+            <header className="topbar">
+              <div>
+                <button
+                  className="icon-button mobile-menu"
+                  aria-label="Open navigation"
+                  onClick={() => setMobile(true)}
+                >
+                  <Menu size={21} />
+                </button>
+                <span className="breadcrumb">
+                  Workspace <span>/</span> <strong>Operations</strong>
+                </span>
+              </div>
+              <div className="header-actions">
+                <div className="team-select">
+                  <label className="sr-only" htmlFor="team-switcher">
+                    Active team
+                  </label>
+                  <select
+                    id="team-switcher"
+                    value={teamId}
+                    onChange={(e) => setTeamId(e.target.value)}
+                  >
+                    <option value="">All my teams</option>
+                    {teams.data?.map((t) => (
+                      <option value={t.id} key={t.id}>
+                        {t.name}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown size={14} />
+                </div>
+                {canCreate && (
+                  <button
+                    className="button primary small-button"
+                    onClick={() => setCreating(true)}
+                  >
+                    <Plus size={16} />
+                    New item
+                  </button>
+                )}
+              </div>
+            </header>
+            <main className="main-content">
+              {teams.isPending ? (
+                <Loading />
+              ) : teams.isError ? (
+                <ErrorBox
+                  error={teams.error}
+                  retry={() => void teams.refetch()}
+                />
+              ) : (
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/items" element={<Explorer />} />
+                  <Route path="/items/:id" element={<Detail />} />
+                  <Route
+                    path="*"
+                    element={
+                      <div className="empty">
+                        <h1>Page not found</h1>
+                        <Link to="/">Return to overview</Link>
+                      </div>
+                    }
+                  />
+                </Routes>
+              )}
+            </main>
+            <footer className="workspace-footer">
+              <span>
+                NewtonOps <span>·</span> Clarity in every operation
+              </span>
+              <span>
+                Built for accountability <ShieldCheck size={12} />
+              </span>
+            </footer>
+          </div>
+        </div>
+        <ItemForm
+          open={creating}
+          onOpenChange={setCreating}
+          onSaved={(item) => {
+            setCreating(false);
+            navigate("/items/" + item.id);
+            setToast("Work item created");
+          }}
+        />
+        <AnimatePresence>
+          {toast && (
+            <motion.div
+              role="status"
+              className="toast"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+            >
+              <span>
+                <Check size={16} />
+              </span>
+              {toast}
+              <button
+                className="icon-button"
+                onClick={() => setToast("")}
+                aria-label="Dismiss notification"
+              >
+                <X size={15} />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </ToastContext.Provider>
+    </SessionContext.Provider>
+  );
+}
+function Root() {
+  const [user, setUser] = useState<User | null>(null);
+  function logout() {
+    setToken(null);
+    client.clear();
+    setUser(null);
+  }
+  return user ? (
+    <Workspace user={user} onLogout={logout} />
+  ) : (
+    <Login onLogin={setUser} />
+  );
+}
+export default function App() {
+  return (
+    <QueryClientProvider client={client}>
+      <BrowserRouter>
+        <MotionConfig reducedMotion="user" transition={{ duration: 0.2 }}>
+          <Root />
+        </MotionConfig>
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
+}
